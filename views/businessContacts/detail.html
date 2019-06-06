@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script>
+        $(function() {
+            "use strict"; // Start of use strict
+            let businessContactId = '<%= businessContactId %>';
+            let country = $('#country').val();
+            console.log(businessContactId);
+            getAjaxMethod('/businessContact/detail/info/' + country + '/' + businessContactId, renderDetail);
+        });
+
+        function renderDetail(data) {
+            console.log(data);
+            $('#worker').val(data.data.worker);
+            $('#regDate').val(data.data.regDate);
+            $('#businessContactTitle').val(data.data.title);
+            $('#businessContactContent').val(data.data.content);
+            $('#businessContactId').val(data.data._id);
+            // $('#businessContactCategory').val(data.data.category);
+        }
+
+        function modifyBusinessContact() {
+            let updateForm = {
+              "country":$('#country').val(),
+              "id": $('#businessContactId').val(),
+              // "category":$('#businessContactCategory').val(),
+              "title": $('#businessContactTitle').val(),
+              "content" : $('#businessContactContent').val()
+            };
+
+            console.log(updateForm);
+
+            putAjaxMethod('/businessContact/' + updateForm.id, updateForm, resultCall);
+        }
+
+        function resultCall (result) {
+          console.log('수정완료');
+          search('crud');
+        }
+    </script>
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-register mx-auto">
+        <div class="card-header">제휴 문의 Detail</div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="regDate" class="form-control" readonly>
+                <label>Reg Date</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="hidden" id="businessContactId">
+                <input type="text" id="worker" class="form-control" readonly>
+                <label>Worker</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="businessContactTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus">
+                <label for="businessContactTitle">Title</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="form-label-group">
+                  <textarea id="businessContactContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Answer"></textarea>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="modifyBusinessContact();">저장</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

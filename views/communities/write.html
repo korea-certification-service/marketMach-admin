@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+    <script>
+      $(function(){
+
+        $('#communityContent').summernote({
+          //tabsize: 2,
+          width: '100%',
+          height: 300,
+          callbacks: {
+            onImageUpload: function(files, editor, welEditable) {
+                // for (var i = files.length - 1; i >= 0; i--) {
+		            // 	sendFile(files[i], this);
+                // }
+                var form_data = new FormData();
+                for (var i = 0; i <files.length; i++) {
+                  form_data.append("image", files[i]);
+                }
+                console.log(form_data)
+                sendFile(form_data, this);
+						}
+          }
+        });    
+      });
+
+      function sendFile(form_data, el) {
+        //console.log(form_data, el)
+        // var form_data = new FormData();
+        // form_data.append("image", file);
+        $.ajax({
+          data: form_data,
+          type: "POST",
+          url: '/community/fileuploads',
+          cache: false,
+          contentType: false,
+          enctype: 'multipart/form-data',
+          processData: false,
+          success: function(imgs) {
+              console.log("success", imgs);
+              for(var i=0; i<imgs.data.images.length; i++){
+                $(el).summernote('editor.insertImage', imgs.data.images[i].path);
+              }
+          }
+        });
+      }
+      function changeType(value) {
+          if(value == 'board') {
+              $('.c-board').css('display','block');
+              $('.c-movie').css('display','none');
+          } else {
+              $('.c-board').css('display','none');
+              $('.c-movie').css('display','block');
+          }
+      }
+
+      function addCommunity() {
+           var communityType = $('#communityType').val();
+           var addForm = {};
+
+           if($('#communityTitle').val() == "") {
+              alert("Title을 입력해주세여.");
+              return;
+           }
+
+           if(communityType == 'board') {
+              //  if($('#communityContent').val() == "") {
+              //      alert("Content을 입력해주세여.");
+              //      return;
+              //  }
+
+               addForm = {
+                   "country":$('#country').val(),
+                   "type":$('#communityType').val(),
+                   "title": $('#communityTitle').val(),
+                   "content" : $('#communityContent').summernote("code")
+               };
+           } else {
+               if($("#upload_filename")[0].files[0] == undefined) {
+                 alert("upload file을 선택해주세여.");
+                 return;
+               }
+
+               if($('#communityURL').val() == "") {
+                   alert("URL을 입력해주세여.");
+                   return;
+               }
+
+               addForm = {
+                   "country":$('#country').val(),
+                   "type":$('#communityType').val(),
+                   "title": $('#communityTitle').val(),
+                   "movieUrl" : $('#communityURL').val()
+               };
+           }
+
+            console.log(addForm);
+
+            postAjaxMethod('/community', addForm, resultCall);
+        }
+
+        function resultCall (result) {
+          data_id = result.data._id;
+        }
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/nav.html', {}) %>
+
+<div id="wrapper">
+    <div class="menu-container">
+        <%- include('../include/sidebar.html', {}) %>
+    </div>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">커뮤니티</a>
+                </li>
+                <li class="breadcrumb-item active">목록</li>
+                <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li>
+            </ol>
+            <!-- 컨텐츠 -->
+            <div class="card width_write mx-auto">
+              <div class="card-header">Register 커뮤니티</div>
+              <div class="card-body">
+                <form>
+                  <div class="form-group">
+                    <div class="form-label-group">
+                      <select id="communityType" class="form-control" onchange="changeType(this.value);">
+                        <option value="board">게시판</option>
+                        <option value="movie">동영상</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-label-group">
+                      <input type="text" id="communityTitle" class="form-control" placeholder="Title" required="required" autofocus="autofocus">
+                      <label for="communityTitle">Title</label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="form-label-group">
+                      <input type="file" id="upload_filename">
+                      <label for="upload_filename">썸네일</label>
+                    </div>
+                  </div>
+                  <div class="form-group c-board">
+                    <div class="form-row">
+                      <!-- <textarea id="communityContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Content"></textarea> -->
+                      <div id="communityContent"></div>
+                    </div>
+                  </div>
+                  <div class="form-group c-movie">
+                    <div class="form-label-group">
+                      <input type="text" id="communityURL" class="form-control" placeholder="ex)Youtube, Facebook, Instargram, etc" required="required" autofocus="autofocus">
+                      <label for="communityURL">URL</label>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="addCommunity();">저장</button>
+                </form>
+              </div>
+            </div>
+            <!--// 컨텐츠 -->
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <div class="footer-container">
+            <%- include('../include/footer.html', {}) %>
+        </div>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+</body>
+</html>

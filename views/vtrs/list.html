@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+    <script>
+        let data, index;
+        let pageIdx = 0;
+        let lastPageYn = false;
+
+        $(function(){
+            "use strict"; // Start of use strict
+            //$(".menu-container").load("/header");
+            //$(".footer-container").load("/footer");
+
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
+
+            postAjaxMethod('/vtrs/search', {"country": $('#country').val()}, renderHTML);
+
+            $("#itemId").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    search()
+                }
+            });
+        });
+
+        function search(pageType) {
+            let param = {
+                "perPage": 20
+            };
+
+            if($('#itemId').val().length != 24) {
+                alert("거래 번호를 정확하게 입력하십시오. (24자리)");
+                return;
+            }
+
+            if($('#itemId').val() != "") param["itemId"] = $('#itemId').val();
+            if($('#country').val() != "") param["country"] = $('#country').val();
+            if(pageType == "prev") {
+                if(pageIdx == 0) {
+                    alert("맨 처음 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx - 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "next") {
+                if(lastPageYn) {
+                    alert("마지막 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx + 1;
+                param["pageIdx"] = pageIdx;
+            } else {
+                pageIdx = 0;
+            }
+
+            postAjaxMethod('/vtrs/search', param, renderHTML);
+        }
+
+        function renderHTML(res) {
+            console.log(res);
+            data = res.data;
+
+            if(data.length > 0) {
+                if(data.length < 20) {
+                    lastPageYn = true;
+                }
+                $('.pagination').css('display','');
+                $('#vtr-list').html('');
+            } else {
+                $('.pagination').css('display','none');
+                $('#vtr-list').html('<tr>\n' +
+'                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
+'                                </tr>');
+            }
+
+            for(var i in data) {
+                let tradeStatusTxt = tradeStatus(data[i].item.status);
+
+                let result = '<tr>\n' +
+'                                <td>'+data[i].item._id+'</td>\n' +
+'                                <td>'+data[i].item.title+'</td>\n' +
+'                                <td><span class="trade-status'+i+'">'+tradeStatusTxt+'</span></td>\n' +
+'                                <td>'+data[i].item.total_price +'</td>\n' +
+'                                <td>'+data[i].regDate+'</td>\n' +
+'                                <td>';
+                if(data[i].item.status == 1) {
+                    result += '                                   <button class="btn btn-outline-info btn-sm btn-coin-trade'+i+'" onclick="updateStatus(\'' + data[i]._id + '\',\''+i+'\')">거래 완료</button>' +
+                    '                                   <button class="btn btn-outline-danger btn-sm btn-coin-trade'+i+'" onclick="deleteTrade(\'' + data[i]._id + '\',\''+i+'\')">거래 취소</button>';
+                }
+                result += '                               </td>\n' +
+'                            </tr>';
+                $('#vtr-list').append(result);
+            }
+        }
+
+        function updateStatus(id, selIndex) {
+            console.log(id);
+            index = selIndex;
+            let confirmYn = confirm("거래를 완료하시겠습니까?");
+            if(confirmYn) {
+                putAjaxMethod('/vtrs/' + id, {"country": $('#country').val()}, resultUpdateStatus);
+            }
+        }
+
+        function resultUpdateStatus() {
+            alert('거래가 완료되었습니다.');
+            $('.trade-status' + index).text('거래 완료');
+            $('.btn-coin-trade' + index).css('display','none');
+        }
+
+        function deleteTrade(id) {
+            console.log(id);
+            deleteAjaxMethod('/vtrs/' + $('#country').val() + '/' + id, resultDeleteTrade);
+        }
+
+        function resultDeleteTrade() {
+            location.href = '/vtrs/lists';
+        }
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/header.html', {}) %>
+
+<div id="wrapper">
+    <%- include('../include/sidebar.html', {}) %>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">거래 관리</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">VTR 관리</a>
+                </li>
+                <li class="breadcrumb-item active">목록</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                거래 국가
+                            </div>
+                            <div class="col-md-6">
+                                <select id="country" class="form-control">
+                                    <option value="KR">한국</option>
+                                    <option value="CN">중국</option>
+                                    <option value="JP">일본</option>
+                                    <option value="EN">영어</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-2">
+                                거래 번호
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="itemId" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label-group">
+                                <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Reg Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="vtr-list">
+                                <tr>
+                                    <td colspan="6">검색 결과가 없습니다.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('prev');" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span><span>prev</span>
+                            </a>
+                        </li>
+                        <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">4</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">5</a></li>-->
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('next');" aria-label="Next">
+                                <span>next</span>&nbsp;<span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <%- include('../include/footer.html', {}) %>
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+</body>
+</html>

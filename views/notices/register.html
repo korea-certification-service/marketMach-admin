@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script>
+        $(function() {
+            "use strict"; // Start of use strict
+        });
+
+       function addNotice() {
+           if($('#noticeCategory').val() == "") {
+               alert("Category을 입력해주세여.");
+               return;
+           }
+
+           if($('#noticeTitle').val() == "") {
+               alert("Title을 입력해주세여.");
+               return;
+           }
+
+           if($('#noticeContent').val() == "") {
+               alert("Content을 입력해주세여.");
+               return;
+           }
+
+           let addForm = {
+               "type":"Notice",
+               "country":$('#country').val(),
+               "category":$('#noticeCategory').val(),
+               "title": $('#noticeTitle').val(),
+               "content" : $('#noticeContent').val()
+           };
+
+            console.log(addForm);
+
+            postAjaxMethod('/notice', addForm, resultCall);
+        }
+
+        function resultCall (result) {
+            location.href = '/notice/lists';
+        }
+    </script>
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-register mx-auto">
+        <div class="card-header">Register a 공지사항</div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="noticeTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus">
+                <label for="noticeTitle">Title</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <textarea id="noticeContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Content"></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="addNotice();">저장</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

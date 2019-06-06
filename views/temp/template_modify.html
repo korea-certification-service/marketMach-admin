@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+    <script>
+
+    </script>    
+</head>
+<body id="page-top">
+        <%- include('../include/header.html', {}) %>
+    
+<div id="wrapper">
+    <div class="menu-container">
+        <%- include('../include/sidebar.html', {}) %>
+    </div>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">커뮤니티</a>
+                </li>
+                <li class="breadcrumb-item active">목록</li>
+                <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li>
+            </ol>
+            <!-- 컨텐츠 -->
+            <div class="card card-register mx-auto">
+                <div class="card-header">커뮤니티 Detail</div>
+                <div class="card-body">
+
+                </div>
+            </div>
+            <!--// 컨텐츠 -->
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <div class="footer-container">
+            <%- include('../include/footer.html', {}) %>
+        </div>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+    </body>
+</html>

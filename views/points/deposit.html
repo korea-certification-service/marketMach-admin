@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+    <script>
+        let index = 0;
+        let statusTxt = '';
+        let pageIdx = 0;
+        let lastPageYn = false;
+        let id;
+        let userId;
+        let amountCurrency = "KRW";
+
+        $(function(){
+            "use strict"; // Start of use strict
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
+
+            $('#modifyPointModal').on('show.bs.modal', function (event) {
+                //event.preventDefault();
+                let button = $(event.relatedTarget);
+                let modalTitle = button.data('modal-title');
+                let modal = $(this);                
+                let pointId = button.data('point-id');
+                let point = button.data('point');
+                id = button.data('id');
+                userId = button.data('user-id');
+                index = button.data('index');
+
+                modal.find('.modal-title').text(modalTitle);
+                modal.find('#pointId').val(pointId);
+                modal.find('#amount').val(point);
+            });
+
+            postAjaxMethod('/points/history/search', {"country":"KR", "type":"deposit", "extType":"bank_account"}, renderHTML);
+
+            $("#name").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    search()
+                }
+            });
+        });
+
+        function search(pageType) {
+            let param = {
+                "perPage": 100,
+                "type":"deposit"
+            };
+
+            if($('#extType').val() != "") param["extType"] = $('#extType').val();
+            if($('#name').val() != "") param["name"] = $('#name').val();
+            if($('#country').val() != "") param["country"] = $('#country').val();
+            if(pageType == "prev") {
+                if(pageIdx == 0) {
+                    alert("맨 처음 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx - 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "next") {
+                if(lastPageYn) {
+                    alert("마지막 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx + 1;
+                param["pageIdx"] = pageIdx;
+            } else {
+                pageIdx = 0;
+            }
+
+            postAjaxMethod('/points/history/search', param, renderHTML);
+        }
+
+        function renderHTML(res) {
+            console.log(res);
+            let data = res.data;
+
+            if(data.length > 0) {
+                if(data.length < 100) {
+                    lastPageYn = true;
+                }
+                $('.pagination').css('display','');
+                $('#depoosit-list').html('');
+            } else {
+                $('.pagination').css('display','none');
+                $('#depoosit-list').html('<tr>\n' +
+'                                    <td colspan="7">검색 결과가 없습니다.</td>\n' +
+'                                </tr>');
+            }
+
+            let result = "";
+            for(var i in data) {
+                if(data[i].status) {
+                    statusTxt = '입금 완료';
+                } else {
+                    statusTxt = '입금 대기';
+                }
+
+                let pointId = data[i].pointId;
+                let userName = data[i].user.userName;
+                let amount = data[i].amount + data[i].amountCurrency;
+                let point = data[i].point;
+                let fee = data[i].fee;
+                let amountCurrency = data[i].amountCurrency;
+
+                result += '<tr>\n' +
+'                                <td>'+userName+'</td>\n' +
+'                                <td>'+amount+'</td>\n' +
+'                                <td>'+fee+'</td>\n' +
+'                                <td>'+point+'Point</td>\n' +
+'                                <td><span class="depoosit-status'+i+'">'+statusTxt+'</span></td>' +
+'                                <td>'+data[i].regDate.substr(2)+'</td>\n' +
+'                                <td>';
+                if(!data[i].status) {
+                    result += '<button class="btn btn-outline-info btn-sm update-depoosit'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user._id+'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
+                }
+                    result += '</td>\n' +
+'                            </tr>';
+            }
+            $('#depoosit-list').html(result);
+        }
+
+        function updateDepoosit() {
+            let confirmYn = confirm("계좌 이체를 완료하시겠습니까?");
+            if(confirmYn) {
+                putAjaxMethod('/points/' + $('#pointId').val(), {"id":id, "userId": userId, "amountCurrency": amountCurrency, "country":$('#country').val(), "type": "deposit", "status": true, "point": $('#amount').val()}, resultDepoosit);
+            }
+        }
+
+        function resultDepoosit() {
+            //alert("계좌 이체가 완료되었습니다.");
+            // $('.depoosit-status'+index).text('입금 완료');
+            // $('.update-depoosit'+index).css('display','none');
+            location.href = "/points/deposits/lists";
+        }
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/header.html', {}) %>
+
+<div id="wrapper">
+    <%- include('../include/sidebar.html', {}) %>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">포인트 관리</a>
+                </li>
+                <li class="breadcrumb-item">출금 관리</li>
+                <li class="breadcrumb-item active">목록</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                거래 국가
+                            </div>
+                            <div class="col-md-6">
+                                <select id="country" class="form-control">
+                                    <option value="KR">한국</option>
+                                    <!-- <option value="CN">중국</option>
+                                    <option value="JP">일본</option>
+                                    <option value="EN">영어</option> -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                입금 방법
+                            </div>
+                            <div class="col-md-6">
+                                <select id="extType" class="form-control">
+                                    <option value="">전체</option>
+                                    <option value="bank_account" selected>계좌 이체</option>
+                                    <!-- <option value="exchange">교환소</option>                                     -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-2">
+                                User Name
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label-group">
+                                <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>입금 요청 금액</th>
+                                <th>수수료</th>
+                                <th>Point</th>
+                                <th>처리상태</th>
+                                <th>등록일</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="depoosit-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('prev');" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span><span>prev</span>
+                            </a>
+                        </li>
+                        <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">4</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">5</a></li>-->
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('next');" aria-label="Next">
+                                <span>next</span>&nbsp;<span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <%- include('../include/footer.html', {}) %>
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="modifyPointModal" tabindex="-1" role="dialog" aria-labelledby="modifyPointModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyPointModalLabel">사용자 수정</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modifyPoint">
+                <div class="container">
+                    <div class="card card-register mx-auto">
+                        <div class="card-header">포인트 입금</div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <div class="form-label-group">
+                                        <input type="hidden" id="pointId">
+                                        <input type="text" id="amount" class="form-control" placeholder="" required="required" autofocus="autofocus">
+                                        <label for="staffPhone">Point</label>
+                                    </div>
+                                </div> 
+                                <a class="btn btn-primary btn-block" href="javascript:updateDepoosit();">저장</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //modal -->
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+</body>
+</html>

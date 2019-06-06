@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+
+    <link href="/stylesheets/style.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="/text-editor/jquery-te-1.4.0.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#cmsContent").jqte();
+
+            "use strict"; // Start of use strict
+            let cmsId = '<%= cmsId %>';
+            let country = $('#country').val();
+            console.log(cmsId);
+            getAjaxMethod('/cms/detail/info/' + country + '/' + cmsId, renderDetail);
+        });
+
+        function renderDetail(data) {
+            console.log(data);
+            $('#worker').val(data.data.worker);
+            $('#regDate').val(data.data.regDate);
+            $('#cmsTitle').val(data.data.title);
+            $('#cmsId').val(data.data._id);
+            $("#cmsContent").jqteVal(data.data.content);
+        }
+
+        function modifyCms() {
+            let updateForm = {
+              "country":$('#country').val(),
+              "id": $('#cmsId').val(),
+              "title": $('#cmsTitle').val(),
+              "content" : $('#cmsContent').val()
+            };
+
+            console.log(updateForm);
+
+            putAjaxMethod('/cms/' + updateForm.id, updateForm, resultCall);
+        }
+
+        function resultCall (result) {
+          console.log('수정완료');
+          search('crud');
+        }
+    </script>
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-register mx-auto">
+        <div class="card-header">CMS Detail</div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="regDate" class="form-control" readonly>
+                <label>Reg Date</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="hidden" id="cmsId">
+                <input type="text" id="worker" class="form-control" readonly>
+                <label>Worker</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="cmsTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus">
+                <label for="cmsTitle">Title</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="form-label-group">
+                  <textarea id="cmsContent" class="form-control" placeholder="내용 입력"></textarea>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="modifyCms();">저장</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

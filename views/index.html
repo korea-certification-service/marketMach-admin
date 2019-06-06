@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/sb-admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+    <link href='/stylesheets/style.css' rel='stylesheet'/>
+
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sb-admin/vendor/chart.js/Chart.min.js"></script>
+    <script src="/sb-admin/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="/sb-admin/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="/sb-admin/js/sb-admin.min.js"></script>
+
+    <title><%= title %></title>
+
+    <script>
+        $(function(){
+            "use strict"; // Start of use strict
+            $(".menu-container").load("/header");
+            $(".footer-container").load("/footer");
+
+            $('#dataTable').DataTable();
+
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
+        });
+    </script>
+</head>
+<body id="page-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+        <a class="navbar-brand mr-1" href="/">MACH Exchange</a>
+
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Navbar Search -->
+        <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        </form>
+
+        <!-- Navbar -->
+        <ul class="navbar-nav ml-auto ml-md-0">
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-fw"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <!--<a class="dropdown-item" href="#">Settings</a>-->
+                    <!--<a class="dropdown-item" href="#">Activity Log</a>-->
+                    <!--<div class="dropdown-divider"></div>-->
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+                </div>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div id="wrapper">
+        <div class="menu-container"></div>
+        <!--&lt;!&ndash; Sidebar &ndash;&gt;-->
+        <!--<ul class="sidebar navbar-nav">-->
+            <!--&lt;!&ndash;<li class="nav-item active">&ndash;&gt;-->
+                <!--&lt;!&ndash;<a class="nav-link" href="/">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<i class="fas fa-fw fa-tachometer-alt"></i>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span>Dashboard</span>&ndash;&gt;-->
+                <!--&lt;!&ndash;</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+            <!--<li class="nav-item dropdown">-->
+                <!--<a class="nav-link dropdown-toggle" href="#" id="userManagementDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                    <!--<i class="fas fa-fw fa-folder"></i>-->
+                    <!--<span>사용자 관리</span>-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu" aria-labelledby="userManagementDropdown">-->
+                    <!--&lt;!&ndash;<h6 class="dropdown-header">Login Screens:</h6>&ndash;&gt;-->
+                    <!--<a class="dropdown-item" href="/users/lists">회원 관리</a>-->
+                    <!--<a class="dropdown-item" href="/staffs/lists">스태프 관리</a>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li class="nav-item dropdown">-->
+                <!--<a class="nav-link dropdown-toggle" href="#" id="tradeManagementDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                    <!--<i class="fas fa-fw fa-folder"></i>-->
+                    <!--<span>거래 관리</span>-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu" aria-labelledby="tradeManagementDropdown">-->
+                    <!--&lt;!&ndash;<h6 class="dropdown-header">Login Screens:</h6>&ndash;&gt;-->
+                    <!--<a class="dropdown-item" href="/vtrs/lists">VTR 관리</a>-->
+                    <!--<a class="dropdown-item" href="/points/lists">포인트 관리</a>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li class="nav-item dropdown">-->
+                <!--<a class="nav-link dropdown-toggle" href="#" id="pointDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                    <!--<i class="fas fa-fw fa-folder"></i>-->
+                    <!--<span>포인트 관리</span>-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu" aria-labelledby="pointDropdown">-->
+                    <!--&lt;!&ndash;<h6 class="dropdown-header">Login Screens:</h6>&ndash;&gt;-->
+                    <!--<a class="dropdown-item" href="/points/withdraws/lists">출금 관리</a>-->
+                <!--</div>-->
+            <!--</li>-->
+        <!--</ul>-->
+        <div id="content-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Breadcrumbs-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Overview</li>
+                </ol>
+
+                <!-- Area Chart Example-->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area"></i>
+                                BTC
+                            </div>
+                            <div class="card-body">
+                                <canvas id="myAreaChart" width="100%" height="30"></canvas>
+                            </div>
+                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area"></i>
+                                ETH
+                            </div>
+                            <div class="card-body">
+                                <canvas id="myAreaChart1" width="100%" height="30"></canvas>
+                            </div>
+                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DataTables Example -->
+                <div class="card mb-3 history-table">
+                    <div class="card-header">
+                        <i class="fas fa-table"></i>
+                        Data Table Example</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>Office</th>
+                                    <th>Age</th>
+                                    <th>Start date</th>
+                                    <th>Salary</th>
+                                </tr>
+                                </thead>
+                                <tbody id="stat-list">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- Sticky Footer -->
+            <div class="footer-container"></div>
+            <!--<footer class="sticky-footer">-->
+                <!--<div class="container my-auto">-->
+                    <!--<div class="copyright text-center my-auto">-->
+                        <!--<span>Copyright © Your Website 2018</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</footer>-->
+
+        </div>
+        <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

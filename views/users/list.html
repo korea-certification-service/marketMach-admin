@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+
+    <script>
+        let pageIdx = 0;
+        let lastPageYn = false;
+        $(function(){
+            "use strict"; // Start of use strict
+            //$(".menu-container").load("/header");
+            //$(".footer-container").load("/footer");
+
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
+
+            $('#modifyUserModal').on('show.bs.modal', function (event) {
+                //event.preventDefault();
+                let button = $(event.relatedTarget);
+                let modalTitle = button.data('modal-title');
+                let modal = $(this);
+                let userId = button.data('id');
+
+                modal.find('.modal-title').text(modalTitle);
+                modal.find('#modifyUser').load('/users/detail/' + userId);
+            });
+
+            postAjaxMethod('/users/search', {}, renderHTML);
+
+            $("#userId").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    search()
+                }
+            });
+        });
+
+        function search(pageType) {
+            let param = {
+                "perPage": 20
+            };
+
+            if($('#userId').val() != "") param["userTag"] = $('#userId').val();
+            if($('#country').val() != "") param["country"] = $('#country').val();
+            if(pageType == "prev") {
+                if(pageIdx == 0) {
+                    alert("맨 처음 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx - 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "next") {
+                if(lastPageYn) {
+                    alert("마지막 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx + 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "crud") {
+                param["pageIdx"] = pageIdx;
+            } else {
+                pageIdx = 0;
+            }
+
+            postAjaxMethod('/users/search', param, renderHTML);
+        }
+
+        function renderHTML(res) {
+            console.log(res);
+            let data = res.data;
+
+            console.log(data.length);
+            if(data.length > 0) {
+                if(data.length < 20) {
+                    lastPageYn = true;
+                }
+                $('#user-list').html('');
+            } else {
+                $('#user-list').html('<tr>\n' +
+'                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
+'                                </tr>');
+            }
+
+            for(var i in data) {
+                let active = '<button class="btn btn-outline-success btn-sm">E-mail 인증</button>';
+                if(data[i].active == 0) {
+                    active = '<button class="btn btn-outline-secondary btn-sm authEmail'+i+'" onclick="authEmail(\''+data[i]._id+'\',\''+i+'\');">E-mail 인증</button>';
+                }
+
+                let result = '<tr>\n' +
+'                                <td>'+data[i].userTag+'</td>\n' +
+'                                <td>'+data[i].userName+'</td>\n' +
+'                                <td>'+data[i].email+'</td>\n' +
+'                                <td>'+(data[i].phone == undefined ? '-' : data[i].phone)+'</td>\n' +
+'                                <td>'+active+'</td>\n' +
+'                                <td>'+data[i].regDate+'</td>\n' +
+'                                <td>' +
+'                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyUserModal">수정</button>' +
+// '                                   <a href="/users/modify/' + data[i]._id + '"  class="btn btn-outline-info btn-sm"">수정</a>' +
+'                                   <button class="btn btn-outline-danger btn-sm" onclick="deleteUser(\''+data[i]._id+'\')">삭제</button>' +
+'                               </td>\n' +
+'                            </tr>';
+                $('#user-list').append(result);
+            }
+        }
+
+        let gIndex;
+        function authEmail(id, index) {
+            gIndex = index;
+            let confirmYn = confirm('E-mail 인증을 하시겠습니까?');
+            if(confirmYn){
+                putAjaxMethod('/users/auth/email/' + id, {"country": $('#country').val(), "active": true}, resultCall);
+            }
+        }
+
+        function resultCall() {
+            $('.authEmail' + gIndex).toggleClass('btn-outline-secondary btn-outline-success');
+        }
+
+        function deleteUser(userId) {
+            let confirmYn = confirm('삭제 하시겠습니까?');
+            if(confirmYn) {
+                deleteAjaxMethod('/users/' + $('#country').val() + '/' + userId, deleteCallback);
+            }
+        }
+
+        function deleteCallback() {
+            search('crud');
+        }
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/header.html', {}) %>
+
+<div id="wrapper">
+    <%- include('../include/sidebar.html', {}) %>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">회원 관리</a>
+                </li>
+                <li class="breadcrumb-item active">목록</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                거래 국가
+                            </div>
+                            <div class="col-md-6">
+                                <select id="country" class="form-control">
+                                    <option value="KR">한국</option>
+                                    <option value="CN">중국</option>
+                                    <option value="JP">일본</option>
+                                    <option value="EN">영어</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-2">
+                                ID
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="userId" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label-group">
+                                <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User Name</th>
+                                <th>E-Mail</th>
+                                <th>Mobile</th>
+                                <th>인증</th>
+                                <th>등록일</th>
+                                <!--<th></th>-->
+                            </tr>
+                            </thead>
+                            <tbody id="user-list">
+                                <tr>
+                                    <td colspan="6">검색 결과가 없습니다.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('prev');" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span><span>prev</span>
+                            </a>
+                        </li>
+                        <!--<li class="page-item active"><a class="page-link" href="#">1</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">4</a></li>-->
+                        <!--<li class="page-item"><a class="page-link" href="#">5</a></li>-->
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('next');" aria-label="Next">
+                                <span>next</span>&nbsp;<span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <%- include('../include/footer.html', {}) %>
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- modify user Modal-->
+<div class="modal fade" id="modifyUserModal" tabindex="-1" role="dialog" aria-labelledby="modifyUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyUserModalLabel">사용자 수정</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modifyUser">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script>
+        $(function() {
+            "use strict"; // Start of use strict
+        });
+
+       function addbusinessContact() {
+           if($('#businessContactCategory').val() == "") {
+               alert("Category을 입력해주세여.");
+               return;
+           }
+
+           if($('#businessContactTitle').val() == "") {
+               alert("Title을 입력해주세여.");
+               return;
+           }
+
+           if($('#businessContactContent').val() == "") {
+               alert("Content을 입력해주세여.");
+               return;
+           }
+
+           let addForm = {
+               "country":$('#country').val(),
+               "category":$('#businessContactCategory').val(),
+               "title": $('#businessContactTitle').val(),
+               "content" : $('#businessContactContent').val()
+           };
+
+            console.log(addForm);
+
+            postAjaxMethod('/businessContact', addForm, resultCall);
+        }
+
+        function resultCall (result) {
+            location.href = '/businessContact/lists';
+        }
+    </script>
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-register mx-auto">
+        <div class="card-header">Register a 제휴 문의 답변</div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="businessContactTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus">
+                <label for="businessContactTitle">Title</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-row">
+                <textarea id="businessContactContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Content"></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="addbusinessContact();">저장</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

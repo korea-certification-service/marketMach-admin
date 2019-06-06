@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+
+    <script>
+        let index = 0;
+        let statusTxt = '';
+        let pageIdx = 0;
+        let lastPageYn = false;
+
+        $(function(){
+            "use strict"; // Start of use strict
+            //$(".menu-container").load("/header");
+            //$(".footer-container").load("/footer");
+
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
+
+            postAjaxMethod('/coins/deposit/search', {country: "KR", coinType: $('#coinType').val()}, renderHTML);
+
+            $("#name").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    search()
+                }
+            });
+        });
+
+        function search(pageType) {
+            let param = {
+                "perPage": 20
+            };
+
+            if($('#name').val() != "") param["userTag"] = $('#name').val();
+            if($('#coinType').val() != "") param["coinType"] = $('#coinType').val();
+            if($('#country').val() != "") param["country"] = $('#country').val();
+            if(pageType == "prev") {
+                if(pageIdx == 0) {
+                    alert("맨 처음 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx - 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "next") {
+                if(lastPageYn) {
+                    alert("마지막 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx + 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "crud") {
+                param["pageIdx"] = pageIdx;
+            } else {
+                pageIdx = 0;
+            }
+
+            postAjaxMethod('/coins/deposit/search', param, renderHTML);
+        }
+
+        function renderHTML(res) {
+            console.log(res);
+            let data = res.data;
+
+            $('#deposit-list').html('');
+            if(data.length > 0) {
+                if(data.length < 20) {
+                    lastPageYn = true;
+                }
+                $('.pagination').css('display','');
+            } else {
+                $('.pagination').css('display','none');
+                $('#deposit-list').html('<tr>\n' +
+'                                    <td colspan="8">검색 결과가 없습니다.</td>\n' +
+'                                </tr>');
+            }
+
+            for(var i in data) {
+                if(!data[i].status) {
+                    statusTxt = '입금 대기';
+                } else {
+                    statusTxt = '입금 완료';
+                }
+
+                let result = '<tr>\n' +
+'                                <td>'+data[i].user.userTag+'</td>\n' +
+'                                <td><span id="deposit-price'+i+'">'+data[i].price+'</span></td>\n' +
+'                                <td><span id="deposit-mach'+i+'">'+data[i].mach+'</span></td>\n' +
+'                                <td>'+statusTxt+'</td>\n' +
+'                                <td>'+data[i].regDate+'</td>\n' +
+'                                <td>'+(data[i].completeDate == undefined ? '-' : data[i].completeDate) +'</td>\n' +
+'                                <td>';
+                if(!data[i].status) {
+                    result += '                                   <button class="btn btn-outline-info btn-sm update-deposit'+i+'" onclick="updateDepositStatus(\'' + data[i].coinId + '\', \'' + data[i]._id + '\', \''+i+'\');">입금완료처리</button>';
+                }
+                    result += '                               </td>\n' +
+'                            </tr>';
+                $('#deposit-list').append(result);
+            }
+        }
+
+        function updateDepositStatus(coinId, historyId, selIndex) {
+            index = selIndex;
+            let params = {
+                "country": $('#country').val(),
+                "coinId": coinId,
+                "status": true,
+                "completedPrice": $('#deposit-price'+selIndex).text(),
+                "mach": $('#deposit-mach'+selIndex).text()
+            };
+            console.log(selIndex, params);
+            let confirmYn = confirm("입금 완료 처리를 진행 하시겠습니까?");
+            if(confirmYn) {
+                putAjaxMethod('/coins/deposit/'+$('#coinType').val()+'/' + historyId, params, resultDepositStatus);
+            }
+        }
+
+        function resultDepositStatus() {
+            //alert("계좌 이체가 완료되었습니다.");
+            search('crud')
+        }
+
+        function refScanSite() {
+            let req_url = "https://chain.so/btc";
+            if($('#coinType').val() != "btc") {
+                req_url = "https://etherscan.io";
+            }
+            window.open(req_url, 'refScanSite');
+        }
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/header.html', {}) %>
+
+<div id="wrapper">
+    <%- include('../include/sidebar.html', {}) %> 
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">코인 관리</a>
+                </li>
+                <li class="breadcrumb-item">입금 관리</li>
+                <li class="breadcrumb-item active">목록</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                거래 국가
+                            </div>
+                            <div class="col-md-6">
+                                <select id="country" class="form-control">
+                                    <option value="KR">한국</option>
+                                    <option value="CN">중국</option>
+                                    <!--<option value="JP">일본</option>-->
+                                    <!--<option value="EN">영어</option>-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                Coin Type
+                            </div>
+                            <div class="col-md-6">
+                                <select id="coinType" class="form-control">
+                                    <option value="btc">BTC</option>
+                                    <option value="ether">ETH</option>
+                                    <option value="mach">MACH</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-2">
+                                User ID
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label-group">
+                                <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
+                            </div>
+                            <a style="display:inline-block; margin-left: 190px; margin-top: 8px;" href="javascript: refScanSite()">거래 내역 조회 참조 사이트는 이곳을 클릭하세요</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Price</th>
+                                <th>Mach</th>
+                                <th>Status</th>
+                                <th>Reg Date</th>
+                                <th>Completed Date</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="deposit-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('prev');" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span><span>prev</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('next');" aria-label="Next">
+                                <span>next</span>&nbsp;<span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <%- include('../include/footer.html', {}) %>
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+</body>
+</html>
