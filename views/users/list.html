@@ -44,6 +44,8 @@
             };
 
             if($('#userId').val() != "") param["userTag"] = $('#userId').val();
+            if($('#email').val() != "") param["email"] = $('#email').val();
+            if($('#phone').val() != "") param["phone"] = $('#phone').val();
             if($('#country').val() != "") param["country"] = $('#country').val();
             if(pageType == "prev") {
                 if(pageIdx == 0) {
@@ -161,18 +163,34 @@
                             <div class="col-md-6">
                                 <select id="country" class="form-control">
                                     <option value="KR">한국</option>
-                                    <option value="CN">중국</option>
+                                    <!-- <option value="CN">중국</option>
                                     <option value="JP">일본</option>
-                                    <option value="EN">영어</option>
+                                    <option value="EN">영어</option> -->
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row" style="margin-bottom:5px;">
                             <div class="col-md-2">
                                 ID
                             </div>
                             <div class="col-md-6">
                                 <input type="text" id="userId" class="form-control">
+                            </div>       
+                        </div>
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                E-mail
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="email" class="form-control">
+                            </div>    
+                        </div>
+                        <div class="form-row" style="margin-bottom:5px;">
+                            <div class="col-md-2">
+                                Phone
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="phone" class="form-control">
                             </div>
                         </div>
                         <div class="form-row">
@@ -195,7 +213,7 @@
                                 <th>Mobile</th>
                                 <th>인증</th>
                                 <th>등록일</th>
-                                <!--<th></th>-->
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody id="user-list">

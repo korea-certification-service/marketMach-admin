@@ -5,6 +5,8 @@ var crypto = require('crypto');
 function listUsers(req) {
     let country = req.body.country == undefined ? "KR" : req.body.country;
     let userTag = req.body.userTag;
+    let email = req.body.email;
+    let phone = req.body.phone;
     let perPage = req.body.perPage == undefined ? 20 : req.body.perPage;
     let pageIdx = req.body.pageIdx == undefined ? 0 : req.body.pageIdx;
     let data = {
@@ -13,11 +15,15 @@ function listUsers(req) {
     }
     let body = {};
     if(userTag !== undefined) {
-        body = {
-            $and: [ {"userTag": userTag} ]
-        };
+        body["userTag"] = userTag;
     }
-
+    if(email !== undefined) {
+        body["email"] = email;
+    }
+    if(phone !== undefined) {
+        body["phone"] = phone;
+    }
+    
     return new Promise((resolve, reject) => {
         db.connectDB(country)
             .then(() => bitwebUser.listUsers(body, data))
