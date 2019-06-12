@@ -31,7 +31,7 @@
 
             postAjaxMethod('/users/search', {}, renderHTML);
 
-            $("#userId").keydown(function (key) {
+            $("#userId, #email, #phone").keydown(function (key) {
                 if (key.keyCode == 13) {
                     search()
                 }
