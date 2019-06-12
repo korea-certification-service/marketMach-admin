@@ -10,29 +10,6 @@
 
         $(function(){
             "use strict"; // Start of use strict
-            //$(".menu-container").load("/header");
-            //$(".footer-container").load("/footer");
-
-            $('#registerNoticeModal').on('show.bs.modal', function (event) {
-                //event.preventDefault();
-                let button = $(event.relatedTarget);
-                let modalTitle = button.data('modal-title');
-                let modal = $(this);
-
-                modal.find('.modal-title').text(modalTitle);
-                modal.find('#registerNotice').load('/notice/register');
-            });
-
-            $('#modifyNoticeModal').on('show.bs.modal', function (event) {
-                //event.preventDefault();
-                let button = $(event.relatedTarget);
-                let modalTitle = button.data('modal-title');
-                let modal = $(this);
-                let noticeId = button.data('id');
-
-                modal.find('.modal-title').text(modalTitle);
-                modal.find('#modifyNotice').load('/notice/detail/' + noticeId);
-            });
 
             $("#sidebarToggle").on('click',function(e) {
                 e.preventDefault();
@@ -40,13 +17,24 @@
                 $(".sidebar").toggleClass("toggled");
             });
 
-            postAjaxMethod('/notice/search', {country: $('#country').val()}, renderHTML);
+            $('#modifyOppositionModal').on('show.bs.modal', function (event) {
+                //event.preventDefault();
+                let button = $(event.relatedTarget);
+                let modalTitle = button.data('modal-title');
+                let modal = $(this);
+                let oppositionId = button.data('id');
 
-            $("#title").keydown(function (key) {
-                if (key.keyCode == 13) {
-                    search()
-                }
+                modal.find('.modal-title').text(modalTitle);
+                modal.find('#modifyOpposition').load('/opposition/detail/' + oppositionId);
             });
+
+            postAjaxMethod('/opposition/search', {country: $('#country').val()}, renderHTML);
+
+            // $("#title").keydown(function (key) {
+            //     if (key.keyCode == 13) {
+            //         search()
+            //     }
+            // });
         });
 
         function search(pageType) {
@@ -76,14 +64,14 @@
                 pageIdx = 0;
             }
 
-            postAjaxMethod('/notice/search', param, renderHTML);
+            postAjaxMethod('/opposition/search', param, renderHTML);
         }
 
         function renderHTML(res) {
             console.log(res);
             data = res.data;
 
-            $('#notice-list').html('');
+            $('#opposition-list').html('');
             if(data.length > 0) {
                 if(data.length < 20) {
                     lastPageYn = true;
@@ -91,8 +79,8 @@
                 $('.pagination').css('display','');
             } else {
                 $('.pagination').css('display','none');
-                $('#notice-list').html('<tr>\n' +
-    '                                    <td colspan="4">검색 결과가 없습니다.</td>\n' +
+                $('#opposition-list').html('<tr>\n' +
+    '                                    <td colspan="5">검색 결과가 없습니다.</td>\n' +
     '                                </tr>');
             }
 
@@ -100,26 +88,14 @@
                 let result = '<tr>\n' +
                     '                                <td>'+data[i].regDate+'</td>\n' +
                     '                                <td>'+data[i].title+'</td>\n' +
-                    '                                <td>'+data[i].worker +'</td>\n' +
+                    '                                <td>'+data[i].reporter +'</td>\n' +
+                    '                                <td>'+(data[i].reply == undefined ? "N" : "Y") +'</td>\n' +
                     '                                <td>' +
-                    '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyNoticeModal">수정</button>' +
-                    '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteNotice(\'' + data[i]._id + '\')">삭제</button>';
+                    '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyOppositionModal">수정</button>' +
                     '                               </td>\n' +
                     '                            </tr>';
-                $('#notice-list').append(result);
+                $('#opposition-list').append(result);
             }
-        }
-
-        function deleteNotice(id) {
-            console.log(id);
-            let confirmYn = confirm('해당 공지사항을 삭제하시겠습니까?');
-            if(confirmYn) {
-                deleteAjaxMethod('/notice/' + $('#country').val() + '/' + id, resultDeleteNotice);
-            }
-        }
-
-        function resultDeleteNotice() {
-            search('crud');
         }
     </script>
 </head>
@@ -138,10 +114,9 @@
                     <a href="#">게시판</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="#">공지사항</a>
+                    <a href="#">이의 제기 관리</a>
                 </li>
                 <li class="breadcrumb-item active">목록</li>
-                <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerNoticeModal">공지사항 등록</button></li>
             </ol>
 
             <!-- DataTables Example -->
@@ -161,14 +136,14 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <!-- <div class="form-row">
                             <div class="col-md-2">
                                 Title
                             </div>
                             <div class="col-md-6">
                                 <input type="text" id="title" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-row">
                             <div class="form-label-group">
                                 <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
@@ -186,18 +161,20 @@
                                 <col width="400">
                                 <col width="100">
                                 <col width="100">
+                                <col width="100">
                             </colgroup>
                             <thead>
                             <tr>
                                 <th>Reg Date</th>
                                 <th>Title</th>
-                                <th>Worker</th>
+                                <th>Reporter</th>
+                                <th>Reply</th>
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody id="notice-list">
+                            <tbody id="opposition-list">
                             <tr>
-                                <td colspan="4">검색 결과가 없습니다.</td>
+                                <td colspan="5">검색 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
@@ -231,41 +208,22 @@
 
 </div>
 <!-- /#wrapper -->
-
-<!-- add notice Modal-->
-<div class="modal fade" id="registerNoticeModal" tabindex="-1" role="dialog" aria-labelledby="registerNoticeModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registerNoticeModalLabel">공지사항 등록</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body" id="registerNotice">
-
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- modify notice Modal-->
-<div class="modal fade" id="modifyNoticeModal" tabindex="-1" role="dialog" aria-labelledby="modifyNoticeModalLabel" aria-hidden="true">
+<div class="modal fade" id="modifyOppositionModal" tabindex="-1" role="dialog" aria-labelledby="modifyOppositionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modifyNoticeModalLabel">공지사항 수정</h5>
+                <h5 class="modal-title" id="modifyOppositionModalLabel">이의 제기 답글달기</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body" id="modifyNotice">
+            <div class="modal-body" id="modifyOpposition">
 
             </div>
         </div>
     </div>
 </div>
-
 <!-- Logout Modal-->
 <%- include('../include/modal_logout.html', {}) %>
 </body>

@@ -18,6 +18,7 @@ var businessContacts = require('./routes/businessContacts');
 var communities = require('./routes/communities');
 var temp = require('./routes/temp');
 var personal = require('./routes/personal');
+var opposition = require('./routes/opposition');
 
 var app = express();
 
@@ -68,6 +69,7 @@ app.use('/notice', notices);
 app.use('/businessContact', businessContacts);
 app.use('/community', communities);
 app.use('/temp', temp);
+app.use('/opposition', opposition);
 
 //add plugin
 app.use('/sb-admin', express.static(__dirname + '/public/javascripts/vendor/sb-admin/'));

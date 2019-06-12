@@ -30,34 +30,34 @@
     <script>
         $(function() {
             "use strict"; // Start of use strict
-            let noticeId = '<%= noticeId %>';
+            let oppositionId = '<%= oppositionId %>';
             let country = $('#country').val();
-            console.log(noticeId);
-            getAjaxMethod('/notice/detail/info/' + country + '/' + noticeId, renderDetail);
+            console.log(oppositionId);
+            getAjaxMethod('/opposition/detail/info/' + country + '/' + oppositionId, renderDetail);
         });
 
         function renderDetail(data) {
             console.log(data);
-            $('#worker').val(data.data.worker);
+            $('#worker').val(data.data.reporter);
             $('#regDate').val(data.data.regDate);
-            $('#noticeTitle').val(data.data.title);
-            $('#noticeContent').val(data.data.content);
-            $('#noticeId').val(data.data._id);
+            $('#oppositionTitle').val(data.data.title);
+            $('#oppositionContent').val(data.data.content);
+            $('#oppositionReply').val(data.data.reply == undefined ? "" : data.data.reply);
+            $('#oppositionId').val(data.data._id);
             // $('#noticeCategory').val(data.data.category);
         }
 
-        function modifyNotice() {
+        function reply() {
             let updateForm = {
               "country":$('#country').val(),
-              "id": $('#noticeId').val(),
+              "id": $('#oppositionId').val(),
               // "category":$('#noticeCategory').val(),
-              "title": $('#noticeTitle').val(),
-              "content" : $('#noticeContent').val()
+              "reply": $('#oppositionReply').val()
             };
 
             console.log(updateForm);
 
-            putAjaxMethod('/notice/' + updateForm.id, updateForm, resultCall);
+            putAjaxMethod('/opposition/' + updateForm.id, updateForm, resultCall);
         }
 
         function resultCall (result) {
@@ -72,7 +72,7 @@
 
     <div class="container">
       <div class="card card-register mx-auto">
-        <div class="card-header">공지사항 상세보기</div>
+        <div class="card-header">이의 제기 상세 내용</div>
         <div class="card-body">
           <form>
             <div class="form-group">
@@ -83,25 +83,32 @@
             </div>
             <div class="form-group">
               <div class="form-label-group">
-                <input type="hidden" id="noticeId">
+                <input type="hidden" id="oppositionId">
                 <input type="text" id="worker" class="form-control" readonly>
-                <label>Worker</label>
+                <label>Reporter</label>
               </div>
             </div>
             <div class="form-group">
               <div class="form-label-group">
-                <input type="text" id="noticeTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus">
-                <label for="noticeTitle">Title</label>
+                <input type="text" id="oppositionTitle" class="form-control" placeholder="Question" required="required" autofocus="autofocus" readonly>
+                <label for="oppositionTitle">Title</label>
               </div>
             </div>
             <div class="form-group">
               <div class="form-row">
                 <div class="form-label-group">
-                  <textarea id="noticeContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Answer"></textarea>
+                  <textarea id="oppositionContent" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="Question" readonly></textarea>
                 </div>
               </div>
             </div>
-            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="modifyNotice();">저장</button>
+            <div class="form-group">
+              <div class="form-row">
+                <div class="form-label-group">
+                  <textarea id="oppositionReply" class="form-control" style="width: 400px; height: 100px; resize: none;" placeholder="답변"></textarea>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="reply();">저장</button>
           </form>
         </div>
       </div>
