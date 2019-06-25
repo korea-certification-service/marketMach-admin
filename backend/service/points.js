@@ -112,7 +112,7 @@ function updateWithdrawStatus(country, pointId, body) {
                         };
                         if(body.type == "withdraw") {
                             let user_point = point._doc.total_point - parseInt(body.point);
-                            if(user_point <= 0) {
+                            if(user_point < 0) {
                                 let result = {
                                     "code":"E001",
                                     "msg":"포인트 출금 금액이 가지고 있는 금액보다 적습니다."
