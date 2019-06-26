@@ -41,7 +41,7 @@
             $('#worker').val(data.data.worker);
             $('#regDate').val(data.data.regDate);
             $('#noticeTitle').val(data.data.title);
-            $('#noticeContent').val(data.data.content);
+            $('#noticeContent').val(data.data.content.replace(/<br>/g, '\r\n'));
             $('#noticeId').val(data.data._id);
             // $('#noticeCategory').val(data.data.category);
         }
@@ -52,7 +52,7 @@
               "id": $('#noticeId').val(),
               // "category":$('#noticeCategory').val(),
               "title": $('#noticeTitle').val(),
-              "content" : $('#noticeContent').val()
+              "content" : $('#noticeContent').val().replace(/\n/g, '<br>')
             };
 
             console.log(updateForm);

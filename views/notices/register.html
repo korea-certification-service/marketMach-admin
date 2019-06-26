@@ -53,7 +53,7 @@
                "country":$('#country').val(),
                "category":$('#noticeCategory').val(),
                "title": $('#noticeTitle').val(),
-               "content" : $('#noticeContent').val()
+               "content" : $('#noticeContent').val().replace(/\n/g, '<br>')
            };
 
             console.log(addForm);
