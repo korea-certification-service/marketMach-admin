@@ -102,7 +102,7 @@
                 }
 
                 let pointId = data[i].pointId;
-                let userName = data[i].user.userName;
+                let userName = data[i].user.userName == undefined ? '-' : data[i].user.userName;
                 let bank = data[i].bankAccountType == undefined ? "" : data[i].bankAccountType + ' ' +data[i].bankAccount;
                 let amount = data[i].amount + data[i].amountCurrency;
                 let point = data[i].point + 'Point';
