@@ -81,16 +81,34 @@ function tradeStatus(status) {
     let result = '';
     switch(status) {
         case 0:
-            result = '거래 등록';
+            result = '거래등록';
             break;
         case 1:
-            result = 'VTR 거래중';
+            result = '구매확인';
             break;
         case 2:
-            result = 'Point 거래중';
+            result = '판매완료';
             break;
         case 3:
-            result = '거래 완료';
+            result = '구매확정';
+            break;
+        case 4:
+            result = '거래완료';
+            break;
+        case 101:
+            result = '구매확인';
+            break;
+        case 102:
+            result = '판매완료';
+            break;
+        case 103:
+            result = '구매확정';
+            break;
+        case 104:
+            result = '거래완료';
+            break;
+        default:
+            result = '이의제기';
             break;
     }
 

@@ -15,25 +15,31 @@ function listVtrs(req) {
     }
     let body = {};
     if(itemId !== undefined) {
+        // body = {
+        //     $and: [ {"item._id": itemId} ]
+        // };
         body = {
-            $and: [ {"item._id": itemId} ]
+            $and: [ {"_id": itemId} ]
         };
     }
 
     return new Promise((resolve, reject) => {
         db.connectDB(country)
-            .then(() => bitwebVtrs.listVtrs(body, data))
-            .then((vtrs) => {
+            .then(() => bitwebItems.getItems(body))
+            .then((items) => {
                 let itemIds = [];
-                for(var i in vtrs) {
-                    itemIds.push(vtrs[i]._doc.item._id);
+                for(var i in items) {
+                    itemIds.push(items[i]._doc._id);
                 }
-                bitwebItems.getItemsByIds(itemIds)
-                    .then((items) => {
+                let condition = {
+                    $and: [ {"item._id": itemIds} ]
+                }
+                bitwebVtrs.listVtrs(condition, data)
+                    .then((vtrs) => {
                         //let result = Object.assign([], tradePoints);
                         for(var i in vtrs) {
                             let selIndex = items.findIndex(function(group){
-                                console.log(group._doc._id + '', vtrs[i]._doc.item._id + '');
+                                //console.log(group._doc._id + '', vtrs[i]._doc.item._id + '');
                                 return (group._doc._id + '') == (vtrs[i]._doc.item._id+ '');
                             })
 
@@ -45,6 +51,32 @@ function listVtrs(req) {
             reject(err)
         })
     })
+
+    // return new Promise((resolve, reject) => {
+    //     db.connectDB(country)
+    //         .then(() => bitwebVtrs.listVtrs(body, data))
+    //         .then((vtrs) => {
+    //             let itemIds = [];
+    //             for(var i in vtrs) {
+    //                 itemIds.push(vtrs[i]._doc.item._id);
+    //             }
+    //             bitwebItems.getItemsByIds(itemIds)
+    //                 .then((items) => {
+    //                     //let result = Object.assign([], tradePoints);
+    //                     for(var i in vtrs) {
+    //                         let selIndex = items.findIndex(function(group){
+    //                             console.log(group._doc._id + '', vtrs[i]._doc.item._id + '');
+    //                             return (group._doc._id + '') == (vtrs[i]._doc.item._id+ '');
+    //                         })
+
+    //                         vtrs[i]['_doc']['item'] = items[selIndex];
+    //                     }
+    //                     resolve(vtrs)
+    //                 })
+    //         }).catch((err) => {
+    //         reject(err)
+    //     })
+    // })
 }
 
 function getVtrById(country, vtrId) {

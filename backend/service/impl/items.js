@@ -1,5 +1,21 @@
 let Items = require('../../model/items');
 
+function getItems(condition) {
+    return new Promise((resolve, reject) => {
+        Items.find(condition)
+            .sort({regDate:'desc'})
+            .exec(function (err, item) {
+                    if (err) {
+                        console.error(err)
+                        reject(err)
+                    }
+                    console.log('getItemsByIds done: ' + item)
+                    resolve(item)
+                }
+            )
+    })
+}
+
 function getItemsByIds(ids) {
     return new Promise((resolve, reject) => {
         Items.find(
@@ -36,5 +52,6 @@ function updateItemStatus(id, body) {
     })
 }
 
+exports.getItems = getItems;
 exports.getItemsByIds = getItemsByIds;
 exports.updateItemStatus = updateItemStatus;

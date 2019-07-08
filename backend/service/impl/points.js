@@ -196,7 +196,7 @@ function getPointHistorys(data, option) {
         PointHistorys.find(data)
         .limit(option.perPage)
         .skip(option.pageIdx * option.perPage)
-        .sort({regDate:'desc'})
+        .sort({completed_buy_date:'desc'})
         .exec(function (err, pointHistorys) {
             if (err) {
                 console.error(err)

@@ -23,34 +23,64 @@ function listPointTrade(req) {
 
     return new Promise((resolve, reject) => {
         db.connectDB(country)
-            .then(() => bitwebPoints.listPointTrade(body,data))
-            .then((tradePoints) => {
-                console.log('result=>' , tradePoints);
-                if(tradePoints.length > 0) {
-                    let itemIds = [];
-                    for (var i in tradePoints) {
-                        itemIds.push(tradePoints[i]._doc.item._id);
-                    }
-                    bitwebItems.getItemsByIds(itemIds)
-                        .then((items) => {
-                            //let result = Object.assign([], tradePoints);
-                            for (var i in tradePoints) {
-                                let selIndex = items.findIndex(function (group) {
-                                    console.log(group._doc._id + '', tradePoints[i]._doc.item._id + '');
-                                    return (group._doc._id + '') == (tradePoints[i]._doc.item._id + '');
-                                })
-
-                                tradePoints[i]['_doc']['item'] = items[selIndex];
-                            }
-                            resolve(tradePoints)
-                        })
-                } else {
-                    resolve(tradePoints)
+            .then(() => bitwebItems.getItems(body))
+            .then((items) => {
+                //console.log('result=>' , tradePoints);
+                let itemIds = [];
+                for (var i in items) {
+                    itemIds.push(items[i]._doc._id);
                 }
+                let condition = {
+                    $and: [ {"item._id": itemIds} ]
+                }
+                bitwebPoints.listPointTrade(condition, data)
+                    .then((tradePoints) => {
+                        //let result = Object.assign([], tradePoints);
+                        for (var i in tradePoints) {
+                            let selIndex = items.findIndex(function (group) {
+                                //console.log(group._doc._id + '', tradePoints[i]._doc.item._id + '');
+                                return (group._doc._id + '') == (tradePoints[i]._doc.item._id + '');
+                            })
+
+                            tradePoints[i]['_doc']['item'] = items[selIndex];
+                        }
+                        resolve(tradePoints)
+                    })
             }).catch((err) => {
             reject(err)
         })
     })
+
+    // return new Promise((resolve, reject) => {
+    //     db.connectDB(country)
+    //         .then(() => bitwebPoints.listPointTrade(body,data))
+    //         .then((tradePoints) => {
+    //             //console.log('result=>' , tradePoints);
+    //             if(tradePoints.length > 0) {
+    //                 let itemIds = [];
+    //                 for (var i in tradePoints) {
+    //                     itemIds.push(tradePoints[i]._doc.item._id);
+    //                 }
+    //                 bitwebItems.getItemsByIds(itemIds)
+    //                     .then((items) => {
+    //                         //let result = Object.assign([], tradePoints);
+    //                         for (var i in tradePoints) {
+    //                             let selIndex = items.findIndex(function (group) {
+    //                                 //console.log(group._doc._id + '', tradePoints[i]._doc.item._id + '');
+    //                                 return (group._doc._id + '') == (tradePoints[i]._doc.item._id + '');
+    //                             })
+
+    //                             tradePoints[i]['_doc']['item'] = items[selIndex];
+    //                         }
+    //                         resolve(tradePoints)
+    //                     })
+    //             } else {
+    //                 resolve(tradePoints)
+    //             }
+    //         }).catch((err) => {
+    //         reject(err)
+    //     })
+    // })
 }
 
 function listPointHistorys(country, body, option) {

@@ -33,10 +33,10 @@
                 "perPage": 20
             };
 
-            if($('#itemId').val().length != 24) {
-                alert("거래 번호를 정확하게 입력하십시오. (24자리)");
-                return;
-            }
+            // if($('#itemId').val().length != 24) {
+            //     alert("거래 번호를 정확하게 입력하십시오. (24자리)");
+            //     return;
+            // }
 
             if($('#itemId').val() != "") param["itemId"] = $('#itemId').val();
             if($('#country').val() != "") param["country"] = $('#country').val();
@@ -86,7 +86,7 @@
 '                                <td>'+data[i].item.title+'</td>\n' +
 '                                <td><span class="trade-status'+i+'">'+tradeStatusTxt+'</span></td>\n' +
 '                                <td>'+data[i].item.total_price +'</td>\n' +
-'                                <td>'+data[i].regDate+'</td>\n' +
+'                                <td>'+data[i].completed_buy_date+'</td>\n' +
 '                                <td>';
                 if(data[i].item.status == 2) {
                     result += '                                   <button class="btn btn-outline-info btn-sm btn-point-trade'+i+'" onclick="updateStatus(\'' + data[i]._id + '\', \''+i+'\')">거래 완료</button>' +
