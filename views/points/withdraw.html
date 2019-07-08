@@ -119,7 +119,7 @@
 '                                <td>'+data[i].regDate.substr(2)+'</td>\n' +
 '                                <td>';
                 if(!data[i].status) {
-                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user._id+'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
+                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user._id  == undefined ? '-' : data[i].user._id +'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
                 }
                     result += '</td>\n' +
 '                            </tr>';
