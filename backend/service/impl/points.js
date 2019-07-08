@@ -9,7 +9,7 @@ function listPointTrade (body,data) {
         PointTrade.find(body)
             .limit(data.perPage)
             .skip(data.pageIdx * data.perPage)
-            .sort({regDate: 'desc'})
+            .sort({completed_buy_date: 'desc'})
             .exec(function (err, pointTrade) {
                 if (err) {
                     console.error(err)
