@@ -104,6 +104,7 @@
                 let pointId = data[i].pointId;
                 let userName = data[i].user == undefined ? '-' : data[i].user.userName;
                 let bank = data[i].bankAccountType == undefined ? "" : data[i].bankAccountType + ' ' +data[i].bankAccount;
+                let user_id = (data[i].user  == undefined ? '-' : data[i].user._id);
                 let amount = data[i].amount + data[i].amountCurrency;
                 let point = data[i].point + 'Point';
                 let fee = data[i].fee;
@@ -119,7 +120,7 @@
 '                                <td>'+data[i].regDate.substr(2)+'</td>\n' +
 '                                <td>';
                 if(!data[i].status) {
-                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user  == undefined ? '-' : data[i].user._id +'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
+                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+ user_id +'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
                 }
                     result += '</td>\n' +
 '                            </tr>';
