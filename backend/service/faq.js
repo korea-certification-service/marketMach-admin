@@ -77,6 +77,11 @@ function listFaqs (req) {
             $or: [{'title' : { $regex: req.body.title, $options: 'i' }}, {'content' : { $regex: req.body.title, $options: 'i' }}, {'category' : { $regex: req.body.title, $options: 'i' }}, ]
         }
     }
+    if(req.body.country != "KR") {
+        data['country'] = req.body.country;
+    } else {
+        data['country'] = {$exists: false};
+    }
     return new Promise((resolve, reject) => {
         db.connectDB(country)
             .then(() => bitwebFaq.listFaqs(data))

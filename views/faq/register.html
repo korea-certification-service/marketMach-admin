@@ -49,11 +49,14 @@
            }
 
            let addForm = {
-               "country":$('#country').val(),
                "category":$('#faqCategory').val(),
                "title": $('#faqTitle').val(),
                "content" : $('#faqContent').val()
            };
+           //한국을 제외한 나머지 국가는 country 를 넣는다.
+           if($('#country').val() != "KR") {
+              addForm["country"] = $('#country').val();
+           }
 
             console.log(addForm);
 

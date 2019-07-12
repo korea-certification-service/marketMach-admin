@@ -50,11 +50,14 @@
 
            let addForm = {
                "type":"Notice",
-               "country":$('#country').val(),
                "category":$('#noticeCategory').val(),
                "title": $('#noticeTitle').val(),
                "content" : $('#noticeContent').val().replace(/\n/g, '<br>')
            };
+
+           if($('#country').val() != "KR") {
+              addForm["country"] = $('#country').val();
+           }
 
             console.log(addForm);
 

@@ -54,9 +54,8 @@ function connect (DB_URI) {
 
 exports.connectDB = function (country) {
     return new Promise((resolve, reject) => {
-        let MONGODB_URL = ""
-        if (country == "KR") MONGODB_URL = config.db.mongodb_url_kr
-        else if (country == "CN") MONGODB_URL = config.db.mongodb_url_cn
+        let MONGODB_URL = config.db.mongodb_url_kr
+        // else if (country == "CN") MONGODB_URL = config.db.mongodb_url_cn
         //else if (country == "JP") MONGODB_URL = config.db.mongodb_url_jp
         //else if (country == "EN") MONGODB_URL = config.db.mongodb_url_en
 
