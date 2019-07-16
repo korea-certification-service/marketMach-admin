@@ -4,6 +4,32 @@ var bitwebUsers = require('./impl/user');
 var bitwebCoins = require('./impl/coins');
 var bitwebItems = require('./impl/items');
 
+function count(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebVtrs.count(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+
+function list(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebVtrs.list(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+
 function listVtrs(req) {
     let country = req.body.country == undefined ? "KR" : req.body.country;
     let itemId = req.body.itemId;
@@ -234,7 +260,8 @@ function deleteVtrs(country, vtrId) {
     })
 }
 
-
+exports.count = count;
+exports.list = list;
 exports.listVtrs = listVtrs;
 exports.getVtrById = getVtrById;
 exports.updateVtrs = updateVtrs;

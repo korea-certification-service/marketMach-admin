@@ -2,6 +2,42 @@ var db = require('../../utils/db');
 var bitwebUser = require('./impl/user');
 var crypto = require('crypto');
 
+function count(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebUser.count(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err)
+        })
+    })
+}
+
+function list(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebUser.list(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err)
+        })
+    })
+}
+
+function detail(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebUser.detail(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err)
+        })
+    })
+}
+
 function listUsers(req) {
     let country = req.body.country == undefined ? "KR" : req.body.country;
     let userTag = req.body.userTag;
@@ -115,6 +151,9 @@ function createWithdrawUser(country, data) {
     })
 }
 
+exports.count = count;
+exports.list = list;
+exports.detail = detail;
 exports.listUsers = listUsers;
 exports.updateAuthEmail = updateAuthEmail;
 exports.getUser = getUser;

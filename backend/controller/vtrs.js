@@ -2,6 +2,39 @@ let BitwebResponse = require('../../utils/BitwebResponse');
 let serviceVtr = require('../service/vtrs');
 let util = require('../../utils/util');
 
+function count(country, condition, res) {
+    var bitwebResponse = new BitwebResponse();
+
+    serviceVtr.count(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    })
+}
+
+function list(country, condition, res) {
+    var bitwebResponse = new BitwebResponse();
+
+    serviceVtr.list(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    })
+}
+
+
 function listVtrs(req, res) {
     var bitwebResponse = new BitwebResponse();
 
@@ -71,6 +104,8 @@ function cancelTradeStatus(req, res) {
     })
 }
 
+exports.list = list;
+exports.count = count;
 exports.listVtrs = listVtrs;
 exports.successTradeStatus = successTradeStatus;
 exports.cancelTradeStatus = cancelTradeStatus;

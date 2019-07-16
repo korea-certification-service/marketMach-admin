@@ -1,10 +1,56 @@
 var Coins = require('../../model/coins');
+var CoinHistorys = require('../../model/coinHistorys');
 var CoinBtcHistorys = require('../../model/coinBtcHistorys');
 var CoinEtherHistorys = require('../../model/coinEtherHistorys');
 var CoinMachHistorys = require('../../model/coinMachHistorys');
 var CoinBtcWithdrawHistory = require('../../model/coinBtcWithdrawHistorys');
 var CoinEtherWithdrawHistory = require('../../model/coinEtherWithdrawHistorys');
 var CoinMachWithdrawHistory = require('../../model/coinMachWithdrawHistorys');
+
+function list(condition) {
+    return new Promise((resolve, reject) => {
+        Coins.find(
+            condition,
+            function(err, coin) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(coin)
+            }
+        )
+    })
+}
+
+function detail(condition) {
+    return new Promise((resolve, reject) => {
+        Coins.findOne(
+            condition,
+            function(err, coin) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(coin)
+            }
+        )
+    })
+}
+
+function detailHistory(condition) {
+    return new Promise((resolve, reject) => {
+        CoinHistorys.find(
+            condition,
+            function(err, coin) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(coin)
+            }
+        )
+    })
+}
 
 function getCoinById(coinId) {
     return new Promise((resolve, reject) => {
@@ -226,6 +272,9 @@ function updateCoinBtcWithdrawHistoryById (historyId, body) {
     })
 }
 
+exports.list = list;
+exports.detail = detail;
+exports.detailHistory = detailHistory;
 exports.getCoinById = getCoinById;
 exports.listBtcDepositHistory = listBtcDepositHistory;
 exports.listEtherDepositHistory = listEtherDepositHistory;

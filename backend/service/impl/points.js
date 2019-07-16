@@ -4,6 +4,64 @@ let PointHistorys = require('../../model/pointHistorys');
 let Points = require('../../model/points');
 var FeeHistorys = require('../../model/feeHistorys');
 
+function list (condition) {
+    return new Promise((resolve, reject) => {
+        Points.find(
+            condition,
+            function(err, point) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(point)
+            }
+        )
+    })
+}
+
+function detail (condition) {
+    return new Promise((resolve, reject) => {
+        Points.findOne(
+            condition,
+            function(err, point) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(point)
+            }
+        )
+    })
+}
+
+function detailHistory (condition) {
+    return new Promise((resolve, reject) => {
+        PointHistorys.find(
+            condition,
+            function(err, point) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(point)
+            }
+        )
+    })
+}
+
+function listTrade (condition) {
+    return new Promise((resolve, reject) => {
+        PointTrade.find(condition)
+            .exec(function (err, pointTrade) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(pointTrade)
+            })
+    })
+}
+
 function listPointTrade (body,data) {
     return new Promise((resolve, reject) => {
         PointTrade.find(body)
@@ -240,7 +298,10 @@ function createFeeHistory (data) {
     })
 }
 
-
+exports.list =list;
+exports.detail = detail;
+exports.detailHistory = detailHistory;
+exports.listTrade = listTrade;
 exports.listPointTrade = listPointTrade;
 exports.getPointBankHistorys = getPointBankHistorys;
 exports.getPointsByIds = getPointsByIds;

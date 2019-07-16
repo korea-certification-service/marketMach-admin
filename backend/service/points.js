@@ -4,6 +4,54 @@ let bitwebUsers = require('./impl/user');
 let bitwebItems = require('./impl/items');
 let util = require('../../utils/util');
 
+function list(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebPoints.list(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+function detail(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebPoints.detail(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+function detailHistory(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebPoints.detailHistory(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+
+function listTrade(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebPoints.listTrade(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
 
 function listPointTrade(req) {
     let country = req.body.country == undefined ? "KR" : req.body.country;
@@ -304,6 +352,10 @@ function deletePointsTrade(tradePointId) {
     })
 }
 
+exports.list = list;
+exports.detail = detail;
+exports.detailHistory = detailHistory;
+exports.listTrade = listTrade;
 exports.listPointTrade = listPointTrade;
 exports.listPointHistorys = listPointHistorys;
 exports.updateWithdrawStatus = updateWithdrawStatus;

@@ -1,6 +1,32 @@
 var Vtrs = require('../../model/vtrs');
 var VtrTemps = require('../../model/vtrTemps');
 
+function count (condition) {
+    return new Promise((resolve, reject) => {
+        Vtrs.count(condition)
+            .exec(function (err, item) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(item)
+            })
+    })
+}
+
+function list (condition) {
+    return new Promise((resolve, reject) => {
+        Vtrs.find(condition)
+            .exec(function (err, item) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(item)
+            })
+    })
+}
+
 function listVtrs (body, data) {
     return new Promise((resolve, reject) => {
         Vtrs.find(body)
@@ -81,7 +107,8 @@ function deleteVtrTempByItemId (id) {
     })
 }
 
-
+exports.count = count;
+exports.list = list;
 exports.listVtrs = listVtrs;
 exports.updateVtr = updateVtr;
 exports.deleteVtr = deleteVtr;

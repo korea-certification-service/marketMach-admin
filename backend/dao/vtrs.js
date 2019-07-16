@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Item = require('./items');
+var ObjectId = Schema.Types.ObjectId;
 
 var vtrsSchema = new Schema({
     mach: Number,
@@ -8,8 +9,8 @@ var vtrsSchema = new Schema({
     sell_status: Boolean,
     completed: Boolean,
     item: Item,
-    from_userId: String,
-    to_userId: String,
+    from_userId: ObjectId,
+    to_userId: ObjectId,
     regDate: String,
     completed_date: String,
     completed_buy_date: String,

@@ -4,6 +4,43 @@ let bitwebCoins = require('./impl/coins');
 let util = require('../../utils/util')
 let ObjectId = require('mongoose').Types.ObjectId;
 
+function list(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebCoins.list(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+function detail(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebCoins.detail(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+function detailHistory(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebCoins.detailHistory(condition))
+            .then((result) => {
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+} 
+
+
 function listCoinDepositHistory(req) {
     return new Promise((resolve, reject) => {
         let country = req.body.country;
@@ -485,6 +522,9 @@ function updateCoinHistoryStatusById(country, historyId, history) {
     })
 }
 
+exports.list = list;
+exports.detail = detail;
+exports.detailHistory = detailHistory;
 exports.listCoinDepositHistory = listCoinDepositHistory;
 exports.listCoinWithdrawHistory = listCoinWithdrawHistory;
 exports.getCoinById = getCoinById;

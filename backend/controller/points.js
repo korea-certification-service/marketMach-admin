@@ -2,6 +2,71 @@ let BitwebResponse = require('../../utils/BitwebResponse');
 let servicePoints = require('../service/points');
 let util = require('../../utils/util');
 
+function list(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    servicePoints.list(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+function detail(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    servicePoints.detail(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+function detailHistory(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    servicePoints.detailHistory(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+function listTrade(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    servicePoints.listTrade(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+
 function listPointTrade(req, res) {
     let bitwebResponse = new BitwebResponse();
 
@@ -128,3 +193,7 @@ exports.listPointHistorys = listPointHistorys;
 exports.updateWithdrawStatus = updateWithdrawStatus;
 exports.successTradeStatus = successTradeStatus;
 exports.cancelTradeStatus = cancelTradeStatus;
+exports.list = list;
+exports.detail = detail;
+exports.listTrade = listTrade;
+exports.detailHistory = detailHistory;

@@ -1,6 +1,51 @@
 var User = require('../../model/user');
 var WithdrawUsers = require('../../model/withdrawUsers');
 
+function count (condition) {
+    return new Promise((resolve, reject) => {
+        User.count(
+            condition,
+            function(err, user) {
+                if (err) {
+                    // console.error(err)
+                    reject(err)
+                }
+                resolve(user)
+            }
+        )
+    })
+}
+
+function list (condition) {
+    return new Promise((resolve, reject) => {
+        User.find(
+            condition,
+            function(err, user) {
+                if (err) {
+                    // console.error(err)
+                    reject(err)
+                }
+                resolve(user)
+            }
+        )
+    })
+}
+
+function detail (condition) {
+    return new Promise((resolve, reject) => {
+        User.findOne(
+            condition,
+            function(err, user) {
+                if (err) {
+                    // console.error(err)
+                    reject(err)
+                }
+                resolve(user)
+            }
+        )
+    })
+}
+
 function listUsers (body, data) {
     return new Promise((resolve, reject) => {
         User.find(body)
@@ -115,6 +160,9 @@ function createWithdrawUser(data) {
     })
 }
 
+exports.count = count;
+exports.list = list;
+exports.detail = detail;
 exports.listUsers = listUsers;
 exports.getUserByPointIds = getUserByPointIds;
 exports.getUserByCoinIds = getUserByCoinIds;

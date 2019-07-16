@@ -5,6 +5,55 @@ var mqtt = require('../../utils/mqtt');
 let ethereumWeb3 = require('../../utils/ethereumWeb3');
 let bitcore_lib = require('../../utils/bitcore_lib');
 
+function list(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    serviceCoins.list(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+function detail(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    serviceCoins.detail(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+function detailHistory(country, condition, res) {
+    let bitwebResponse = new BitwebResponse();
+    
+    serviceCoins.detailHistory(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+} 
+
+
 function listCoinDepositHistory(req, res) {
     let bitwebResponse = new BitwebResponse();
 
@@ -192,6 +241,9 @@ function updateWithdrawHistory(req, res) {
     }
 }
 
+exports.list = list;
+exports.detail = detail;
+exports.detailHistory = detailHistory;
 exports.listCoinDepositHistory = listCoinDepositHistory;
 exports.listCoinWithdrawHistory = listCoinWithdrawHistory;
 exports.updateBtcCoinDepositHistory = updateBtcCoinDepositHistory;

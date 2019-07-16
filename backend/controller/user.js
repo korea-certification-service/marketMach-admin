@@ -1,6 +1,53 @@
 var BitwebResponse = require('../../utils/BitwebResponse');
 var serviceUser = require('../service/user');
 
+function count(country, condition) {
+    let bitwebResponse = new BitwebResponse();
+
+    serviceUser.count(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+}
+
+function list(country, condition) {
+    let bitwebResponse = new BitwebResponse();
+
+    serviceUser.list(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+}
+
+function detail(country, condition) {
+    let bitwebResponse = new BitwebResponse();
+    
+    serviceUser.detail(country, condition)
+        .then(result => {
+            bitwebResponse.code = 200;
+            bitwebResponse.data = result;
+            res.status(200).send(bitwebResponse.create());
+        }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    });
+}
 
 function listUsers(req, res) {
     let bitwebResponse = new BitwebResponse();
@@ -107,6 +154,9 @@ function removeUser(req, res) {
     })
 }
 
+exports.count = count;
+exports.list = list;
+exports.detail = detail;
 exports.listUsers = listUsers;
 exports.updateAuthEmail = updateAuthEmail;
 exports.getUser = getUser;
