@@ -21,6 +21,9 @@ function create(country, req) {
     return new Promise((resolve, reject) => {
 
         var data = req.body;
+        if(req.body.country == "KR") {
+            delete data['country'];
+        }
         data['reporter'] = req.session.userName;
         data['regDate'] = util.formatDate(new Date());
 
@@ -76,6 +79,11 @@ function listCommunitys (req) {
         data = {
             $or: [{'title' : { $regex: req.body.title, $options: 'i' }}, {'content' : { $regex: req.body.title, $options: 'i' }} ]
         }
+    }
+    if(country != "KR") {
+        data['country'] = country;
+    } else {
+        data['country'] = {$exists: false};
     }
     return new Promise((resolve, reject) => {
         db.connectDB(country)
