@@ -46,6 +46,21 @@ function detail (condition) {
     })
 }
 
+function listWithdrawUsers (condition) {
+    return new Promise((resolve, reject) => {
+        WithdrawUsers.find(condition)
+            .sort({regDate: 'desc'})
+            .exec(function (err, item) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(item)
+            })
+    })
+}
+
+
 function listUsers (body, data) {
     return new Promise((resolve, reject) => {
         User.find(body)
@@ -170,3 +185,4 @@ exports.getByUserId = getByUserId;
 exports.update = update;
 exports.deleteUserById = deleteUserById;
 exports.createWithdrawUser = createWithdrawUser;
+exports.listWithdrawUsers = listWithdrawUsers;

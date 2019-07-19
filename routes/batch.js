@@ -143,6 +143,27 @@ router.get('/user/detail/:userTag', function (req, res, next) {
     })
 });
 
+router.post('/user/withdraw/list', function (req, res, next) {
+    let country = dbconfig.country;
+    let condition = {};
+    if(req.body.length > 0) {
+        condition = req.body;
+    }
+    let bitwebResponse = new BitwebResponse();
+
+    serviceUsers.list(country, condition)
+    .then(users => {
+        bitwebResponse.code = 200;
+        bitwebResponse.data = users;
+        res.status(200).send(bitwebResponse.create())
+    }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    })
+});
+
 router.post('/history/coin/list', function (req, res, next) {
     let country = dbconfig.country;
     let bitwebResponse = new BitwebResponse();

@@ -38,6 +38,20 @@ function detail(country, condition) {
     })
 }
 
+function listWithdrawUser(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebUser.listWithdrawUser(condition))
+            .then((result) => {
+                console.log('result=>' , result);
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
 function listUsers(req) {
     let country = req.body.country == undefined ? "KR" : req.body.country;
     let userTag = req.body.userTag;
@@ -160,3 +174,4 @@ exports.getUser = getUser;
 exports.update = update;
 exports.remove = remove;
 exports.createWithdrawUser = createWithdrawUser;
+exports.listWithdrawUser = listWithdrawUser;
