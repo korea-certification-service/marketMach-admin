@@ -151,7 +151,7 @@ router.post('/user/withdraw/list', function (req, res, next) {
     }
     let bitwebResponse = new BitwebResponse();
 
-    serviceUsers.list(country, condition)
+    serviceUsers.listWithdrawUser(country, condition)
     .then(users => {
         bitwebResponse.code = 200;
         bitwebResponse.data = users;
