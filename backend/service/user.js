@@ -41,7 +41,7 @@ function detail(country, condition) {
 function listWithdrawUser(country, condition) {
     return new Promise((resolve, reject) => {
         db.connectDB(country)
-            .then(() => bitwebUser.listWithdrawUser(condition))
+            .then(() => bitwebUser.listWithdrawUsers(condition))
             .then((result) => {
                 console.log('result=>' , result);
                 resolve(result)
