@@ -1,8 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../include/head.html', {}) %>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/sb-admin/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+    <link href='/stylesheets/style.css' rel='stylesheet'/>
+    <link href='/text-editor/jquery-te-1.4.0.css' rel='stylesheet'/>
+
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sb-admin/vendor/chart.js/Chart.min.js"></script>
+    <script src="/sb-admin/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="/sb-admin/vendor/datatables/dataTables.bootstrap4.js"></script>
+    <script src="/sb-admin/js/sb-admin.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+    <script src="/text-editor/jquery-te-1.4.0.min.js"></script>
+
     <title><%= title %></title>
+
     <script>
         let data, index;
         let pageIdx = 0;
@@ -10,8 +30,8 @@
 
         $(function(){
             "use strict"; // Start of use strict
-            //$(".menu-container").load("/header");
-            //$(".footer-container").load("/footer");
+            $(".menu-container").load("/header");
+            $(".footer-container").load("/footer");
 
             $('#registerCommunityModal').on('show.bs.modal', function (event) {
                 //event.preventDefault();
@@ -103,8 +123,7 @@
                     '                                <td>'+data[i].title+'</td>\n' +
                     '                                <td>'+data[i].reporter +'</td>\n' +
                     '                                <td>' +
-                    // '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
-                    '                                   <a href="/community/modify/' + data[i]._id + '"  class="btn btn-outline-info btn-sm"">수정</a>' +
+                    '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
                     '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteCommunity(\'' + data[i]._id + '\')">삭제</button>';
                     '                               </td>\n' +
                     '                            </tr>';
@@ -126,10 +145,37 @@
     </script>
 </head>
 <body id="page-top">
-    <%- include('../include/header.html', {}) %>
+<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+    <a class="navbar-brand mr-1" href="/">MACH Exchange</a>
+
+    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Navbar Search -->
+    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+    </form>
+
+    <!-- Navbar -->
+    <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user-circle fa-fw"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <!--<a class="dropdown-item" href="#">Settings</a>-->
+                <!--<a class="dropdown-item" href="#">Activity Log</a>-->
+                <!--<div class="dropdown-divider"></div>-->
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+            </div>
+        </li>
+    </ul>
+
+</nav>
 
 <div id="wrapper">
-    <%- include('../include/sidebar.html', {}) %>
+    <div class="menu-container"></div>
 
     <div id="content-wrapper">
 
@@ -141,8 +187,7 @@
                     <a href="#">커뮤니티</a>
                 </li>
                 <li class="breadcrumb-item active">목록</li>
-                <!-- <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li> -->
-                <li style="margin-left: 5px;"><a href="/community/write" class="btn btn-outline-info btn-sm">커뮤니티 등록</a></li>
+                <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li>
             </ol>
 
             <!-- DataTables Example -->
@@ -156,7 +201,8 @@
                             <div class="col-md-6">
                                 <select id="country" class="form-control">
                                     <option value="KR">한국</option>
-                                    <option value="CN">중국</option>
+                                    <option value="EN">영어</option>
+                                    <!-- <option value="CN">중국</option> -->
                                     <!--<option value="JP">일본</option>-->
                                     <!--<option value="EN">영어</option>-->
                                 </select>
@@ -228,7 +274,8 @@
         <!-- /.container-fluid -->
 
         <!-- Sticky Footer -->
-        <%- include('../include/footer.html', {}) %>
+        <div class="footer-container"></div>
+
     </div>
     <!-- /.content-wrapper -->
 
@@ -236,14 +283,57 @@
 <!-- /#wrapper -->
 
 <!-- add community Modal-->
-<% var objOpt ={modalId: "registerCommunityModal", modalTitle: "공지사항 등록", bodyId: "registerCommunity"}; %>
-<%- include('../include/modal.html', {objOpt}) %>
-    
+<div class="modal fade" id="registerCommunityModal" tabindex="-1" role="dialog" aria-labelledby="registerCommunityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerCommunityModalLabel">공지사항 등록</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="registerCommunity">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- modify community Modal-->
-<% var objOpt ={modalId: "modifyCommunityModal", modalTitle: "FAQ 수정", bodyId: "modifyCommunity"}; %>
-<%- include('../include/modal.html', {objOpt}) %>
+<div class="modal fade" id="modifyCommunityModal" tabindex="-1" role="dialog" aria-labelledby="modifyCommunityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyCommunityModalLabel">FAQ 수정</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modifyCommunity">
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Logout Modal-->
-<%- include('../include/modal_logout.html', {}) %>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

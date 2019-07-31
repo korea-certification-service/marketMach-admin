@@ -4,6 +4,7 @@ var serviceUsers = require('../backend/service/user');
 var serviceCoins = require('../backend/service/coins');
 var servicePoints = require('../backend/service/points');
 var serviceVtrs = require('../backend/service/vtrs');
+var serviceGameStation = require('../backend/service/gameStation');
 var util = require('../utils/util');
 var dbconfig = require('../config/dbconfig');
 var BitwebResponse = require('../utils/BitwebResponse')
@@ -176,6 +177,27 @@ router.post('/history/coin/list', function (req, res, next) {
     .then(coinHistory => {
         bitwebResponse.code = 200;
         bitwebResponse.data = coinHistory;
+        res.status(200).send(bitwebResponse.create())
+    }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    })
+});
+
+router.post('/gameStation/action/list', function (req, res, next) {
+    let country = dbconfig.country;
+    let bitwebResponse = new BitwebResponse();
+    let condition = {};
+    if(req.body.length > 0) {
+        condition = req.body;
+    }
+
+    serviceGameStation.list(country,condition) 
+    .then(gameStationPlays => {
+        bitwebResponse.code = 200;
+        bitwebResponse.data = gameStationPlays;
         res.status(200).send(bitwebResponse.create())
     }).catch((err) => {
         console.error('err=>', err)
