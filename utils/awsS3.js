@@ -43,7 +43,7 @@ function multiUpload() {
             bucket: credentials.s3.bucket,
             acl: 'public-read',
             metadata: function (req, files, cb) {
-                cb(null, {fieldName: files.fieldname});
+                cb(null, {fieldName: files.fieldname + '-' + Date.now().toString()});
             },
             key: function (req, file, cb) {
                 cb(null, Date.now().toString())
