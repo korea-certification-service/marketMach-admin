@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../include/head.html', {}) %>
+    <title><%= title %></title>
+    <script>
+    //     let data, index;
+    //     let pageIdx = 0;
+    //     let lastPageYn = false;
+
+    //     $(function(){
+    //         "use strict"; // Start of use strict
+    //         //$(".menu-container").load("/header");
+    //         //$(".footer-container").load("/footer");
+
+    //         $('#modifyCommunityModal').on('show.bs.modal', function (event) {
+    //             //event.preventDefault();
+    //             let button = $(event.relatedTarget);
+    //             let modalTitle = button.data('modal-title');
+    //             let modal = $(this);
+    //             let communityId = button.data('id');
+
+    //             modal.find('.modal-title').text(modalTitle);
+    //             modal.find('#modifyCommunity').load('/community/detail/' + communityId);
+    //         });
+
+    //         $("#sidebarToggle").on('click',function(e) {
+    //             e.preventDefault();
+    //             $("body").toggleClass("sidebar-toggled");
+    //             $(".sidebar").toggleClass("toggled");
+    //         });
+
+    //         postAjaxMethod('/community/search', {country: $('#country').val()}, renderHTML);
+
+    //         // $("#title").keydown(function (key) {
+    //         //     if (key.keyCode == 13) {
+    //         //         search()
+    //         //     }
+    //         // });
+    //     });
+
+    //     function search(pageType) {
+    //         let param = {
+    //             "perPage": 20
+    //         };
+
+    //         if($('#title').val() != "") param["title"] = $('#title').val();
+    //         // if($('#country').val() != "") param["country"] = $('#country').val();
+    //         if(pageType == "prev") {
+    //             if(pageIdx == 0) {
+    //                 alert("맨 처음 페이지 입니다.");
+    //                 return;
+    //             }
+    //             pageIdx = pageIdx - 1;
+    //             param["pageIdx"] = pageIdx;
+    //         } else if(pageType == "next") {
+    //             if(lastPageYn) {
+    //                 alert("마지막 페이지 입니다.");
+    //                 return;
+    //             }
+    //             pageIdx = pageIdx + 1;
+    //             param["pageIdx"] = pageIdx;
+    //         } else if(pageType == "crud") {
+    //             param["pageIdx"] = pageIdx;
+    //         } else {
+    //             pageIdx = 0;
+    //         }
+
+    //         postAjaxMethod('/community/search', param, renderHTML);
+    //     }
+
+    //     function renderHTML(res) {
+    //         console.log(res);
+    //         data = res.data;
+
+    //         $('#community-list').html('');
+    //         if(data.length > 0) {
+    //             if(data.length < 20) {
+    //                 lastPageYn = true;
+    //             }
+    //             $('.pagination').css('display','');
+    //         } else {
+    //             $('.pagination').css('display','none');
+    //             $('#community-list').html('<tr>\n' +
+    // '                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
+    // '                                </tr>');
+    //         }
+
+    //         for(var i in data) {
+    //             let result = '<tr>\n' +
+    //                 '                                <td>'+data[i].regDate+'</td>\n' +
+    //                 '                                <td>'+data[i].type+'</td>\n' +
+    //                 '                                <td>'+(data[i].notice == undefined ? false : data[i].notice) +'</td>\n' +
+    //                 '                                <td>'+data[i].title+'</td>\n' +
+    //                 '                                <td>'+data[i].reporter +'</td>\n' +
+    //                 '                                <td>' +
+    //                 // '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
+    //                 '                                   <a href="/community/modify/' + data[i]._id + '"  class="btn btn-outline-info btn-sm"">수정</a>' +
+    //                 '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteCommunity(\'' + data[i]._id + '\')">삭제</button>';
+    //                 '                               </td>\n' +
+    //                 '                            </tr>';
+    //             $('#community-list').append(result);
+    //         }
+    //     }
+
+    /***************detail화면을 보기위한 임시 tr태그****************/
+    $(function(){
+        $('#community-list').html('');
+        let result = '<tr>\n' +
+            '                                <td>'+"유저태그"+'</td>\n' +
+            '                                <td>'+"이름"+'</td>\n' +
+            '                                <td>'+"성" +'</td>\n' +
+            '                                <td>'+"생년월일"+'</td>\n' +
+            '                                <td>' +
+            '                                   <a href="/kyc/detail/' + "id123" + '"  class="btn btn-outline-info btn-sm"">응답</a>' +
+            '                               </td>\n' +
+            '                            </tr>';
+        $('#community-list').append(result);
+
+    });
+    /***************///detail화면을 보기위한 임시 tr태그****************/
+
+    </script>
+</head>
+<body id="page-top">
+    <%- include('../include/header.html', {}) %>
+
+<div id="wrapper">
+    <%- include('../include/sidebar.html', {}) %>
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">KYC</a>
+                </li>
+                <li class="breadcrumb-item active">목록</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-2">
+                                Title
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="title" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label-group">
+                                <button class="btn btn-primary btn-block" onclick="search('');">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 history-table">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <colgroup>
+                                <col width="150">
+                                <col width="80">
+                                <col width="80">
+                                <col width="340">
+                                <col width="100">
+                                <col width="100">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>UserTag</th>                                
+                                <th>First Name</th>
+                                <th>Surname</th>
+                                <th>Date of birth</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody id="community-list">
+                            <tr>
+                                <td colspan="5">검색 결과가 없습니다.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-5">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('prev');" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span><span>prev</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:search('next');" aria-label="Next">
+                                <span>next</span>&nbsp;<span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <%- include('../include/footer.html', {}) %>
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- add community Modal-->
+<% var objOpt ={modalId: "registerCommunityModal", modalTitle: "공지사항 등록", bodyId: "registerCommunity"}; %>
+<%- include('../include/modal.html', {objOpt}) %>
+    
+<!-- modify community Modal-->
+<% var objOpt ={modalId: "modifyCommunityModal", modalTitle: "FAQ 수정", bodyId: "modifyCommunity"}; %>
+<%- include('../include/modal.html', {objOpt}) %>
+
+<!-- Logout Modal-->
+<%- include('../include/modal_logout.html', {}) %>
+</body>
+</html>

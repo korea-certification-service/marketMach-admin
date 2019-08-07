@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="/sb-admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="/sb-admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template-->
+    <link href="/sb-admin/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+    <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- <script>
+        $(function() {
+            "use strict"; // Start of use strict
+            let kycId = '<%= kycId %>';
+            let country = $('#country').val();
+            console.log(kycId);
+            getAjaxMethod('/community/detail/info/' + country + '/' + kycId, renderDetail);
+        });
+
+        function renderDetail(data) {
+            console.log(data);
+            $('#worker').val(data.data.reporter);
+            $('#regDate').val(data.data.regDate);
+            $('#communityTitle').val(data.data.title);
+            $('#communityContent').val(data.data.content);
+            $('#kycId').val(data.data._id);
+            $('#communityType').val(data.data.type);
+            $('#communityURL').val(data.data.movieUrl);
+            $('.upload-name').val(data.data.images[0].origin_name);
+        }
+
+        function modifyCommunity() {
+            let communityType = $('#communityType').val();
+            let updateForm = {};
+            if($('#communityTitle').val() == "") {
+                alert("Title을 입력해주세여.");
+                return;
+            }
+
+            if($('#communityContent').val() == "") {
+                alert("Content을 입력해주세여.");
+                return;
+            }
+
+            updateForm = {
+                "country":$('#country').val(),
+                "id": $('#kycId').val(),
+                "type":$('#communityType').val(),
+                "title": $('#communityTitle').val(),
+                "content" : $('#communityContent').val(),
+                "movieUrl" : $('#communityURL').val()
+            };
+
+            console.log(updateForm);
+
+            putAjaxMethod('/community/' + updateForm.id, updateForm, resultCall);
+        }
+
+        function resultCall (result) {
+          let image = new FormData();
+          let imageData = $("#upload_filename")[0].files[0];
+          
+          if (imageData != null) {
+            image.append("image", $("#upload_filename")[0].files[0]);
+            imageAjaxMethod('/community/' + $('#country').val() + '/' + result.data._id+ "/images", image, resultImageCallback); 
+          } else {
+            search('crud');
+          }
+        }
+
+        function resultImageCallback (result) {
+          console.log('수정완료');
+          search('crud');
+        }
+    </script> -->
+
+  </head>
+
+  <body class="bg-dark">
+
+    <div class="container">
+      <div class="card card-register mx-auto">
+        <div class="card-header">KYC Detail</div>
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="userName" class="form-control" readonly>
+                <label>이름</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="sex" class="form-control" readonly>
+                <label>성별</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="birth" class="form-control" readonly>
+                <label>생년월일</label>
+              </div>
+            </div>  
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="kycType" class="form-control" readonly>
+                <label>KYC 타입</label>
+              </div>
+            </div>  
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="kycNo" class="form-control" readonly>
+                <label>고유번호</label>
+              </div>
+            </div>  
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="kycRegDate" class="form-control" readonly>
+                <label>발행일자</label>
+              </div>
+            </div>                                
+            <div class="form-group">
+              <div class="form-label-group">
+                <img src="" alt="kycImage" id="kycImage">
+              </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label-group">
+                    <select id="selectSex" class="form-control" data-size="5" data-live-search="true">
+                        <option value="" selected>-- 선택 --</option>
+                        <option value="allow">승인</option>
+                        <option value="reject">거절</option>
+                      </select>
+                </div>
+            </div>
+            <div class="form-group c-board">
+              <div class="form-row" style="display: block; margin-right: 0; margin-left: 0;">
+                <div class="form-label-group">
+                  <textarea id="communityContent" class="form-control" style="height: 100px; resize: none;" placeholder="Answer"></textarea>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" data-dismiss="modal">전송</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
