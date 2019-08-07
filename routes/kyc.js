@@ -6,7 +6,7 @@ var sessionChecker = require('../utils/session');
 
 /* GET home page. */
 router.get('/lists', sessionChecker.sessionChecker, function(req, res, next) {
-    res.render('kyc/list', { title: 'Biteweb Admin - 커뮤니티' });
+    res.render('kyc/list', { title: 'Biteweb Admin - KYC' });
 });
 
 // router.post('/search', function(req, res, next) {
@@ -22,7 +22,7 @@ router.get('/lists', sessionChecker.sessionChecker, function(req, res, next) {
 // });
 
 router.get('/detail/:kycId', function(req, res, next) {
-    res.render('kyc/detail', { title: 'Biteweb Admin - modify', kycId: req.params.kycId});
+    res.render('kyc/detail', { title: 'Biteweb Admin - detail', kycId: req.params.kycId});
 });
 
 // router.get('/detail/info/:country/:communityId', function (req, res, next) {
