@@ -92,7 +92,7 @@
             } else {
                 $('.pagination').css('display','none');
                 $('#community-list').html('<tr>\n' +
-    '                                    <td colspan="5">검색 결과가 없습니다.</td>\n' +
+    '                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
     '                                </tr>');
             }
 
@@ -100,6 +100,7 @@
                 let result = '<tr>\n' +
                     '                                <td>'+data[i].regDate+'</td>\n' +
                     '                                <td>'+data[i].type+'</td>\n' +
+                    '                                <td>'+(data[i].notice == undefined ? false : data[i].notice) +'</td>\n' +
                     '                                <td>'+data[i].title+'</td>\n' +
                     '                                <td>'+data[i].reporter +'</td>\n' +
                     '                                <td>' +
@@ -184,15 +185,17 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <colgroup>
                                 <col width="150">
-                                <col width="100">
-                                <col width="400">
+                                <col width="80">
+                                <col width="80">
+                                <col width="340">
                                 <col width="100">
                                 <col width="100">
                             </colgroup>
                             <thead>
                             <tr>
-                                <th>Reg Date</th>
+                                <th>Reg Date</th>                                
                                 <th>Type</th>
+                                <th>Notice</th>
                                 <th>Title</th>
                                 <th>Worker</th>
                                 <th></th>

@@ -9,12 +9,11 @@
             let country = $('#country').val();
             console.log(communityId);
             getAjaxMethod('/community/detail/info/' + country + '/' + communityId, renderDetail);
-            åss
-            $('#communityContent').summernote({
-                //tabsize: 2,
-                width: '100%',
-                height: 300,
-            });
+            // $('#communityContent').summernote({
+            //     //tabsize: 2,
+            //     width: '100%',
+            //     height: 300,
+            // });
         });
 
         function renderDetail(data) {
@@ -27,12 +26,6 @@
             $('#communityType').val(data.data.type);
             $('#communityURL').val(data.data.movieUrl);
             $('.upload-name').val(data.data.images[0].origin_name);
-
-            if (data.data.type == 'board') {
-                $('.c-movie').css('display', 'none');
-            } else {
-                $('.c-board').css('display', 'none');
-            }
         }
 
         function modifyCommunity() {
@@ -98,7 +91,7 @@
     </script>
 </head>
 <body id="page-top">
-    <%- include('../include/nav.html', {}) %>
+    <%- include('../include/header.html', {}) %>
 
 <div id="wrapper">
     <div class="menu-container">
@@ -107,83 +100,80 @@
 
     <div id="content-wrapper">
 
-        <div class="container-fluid">
+            <div class="container-fluid">
 
-            <!-- Breadcrumbs-->
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="#">커뮤니티</a>
-                </li>
-                <li class="breadcrumb-item active">목록</li>
-                <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li>
-            </ol>
-            <!-- 컨텐츠 -->
-            <div class="card card-register mx-auto">
-                <div class="card-header">커뮤니티 Detail</div>
-                <div class="card-body">
+                <!-- Breadcrumbs-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#">커뮤니티</a>
+                    </li>
+                    <li class="breadcrumb-item active">목록</li>
+                    <li style="margin-left: 5px;"><button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#registerCommunityModal">커뮤니티 등록</button></li>
+                </ol>
+                <!-- 컨텐츠 -->
+                <div class="card width_write mx-auto">
+                    <div class="card-header">Register 커뮤니티</div>
+                    <div class="card-body">
                     <form>
                         <div class="form-group">
-                            <select id="country" class="form-control">
-                                <option value="KR">한국</option>
-                                <option value="CN">중국</option>
-                                <!--<option value="JP">일본</option>-->
-                                <!--<option value="EN">영어</option>-->
-                            </select>                        
-                        </div>
-                        <div class="form-group">
                             <div class="form-label-group">
-                                <input type="text" id="regDate" class="form-control" readonly>
-                                <label>Reg Date</label>
+                                <select id="country" class="form-control">
+                                    <option value="KR">한국</option>
+                                    <option value="EN">영어</option>
+                                    <!--<option value="JP">일본</option>-->
+                                    <!--<option value="EN">영어</option>-->
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="hidden" id="communityId">
-                                <input type="text" id="worker" class="form-control" readonly>
-                                <label>Reporter</label>
-                            </div>
+                        <div class="form-label-group">
+                            <select id="communityType" class="form-control">
+                            <option value="free">자유게시판</option>
+                            <option value="tabloid">찌라시</option>
+                            <option value="event">이벤트</option>
+                            <option value="game">게임</option>
+                            <option value="cryptocurrency">암호화폐</option>
+                            </select>
+                        </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="communityType" class="form-control" placeholder="Type" readonly>
-                                <label for="communityType">Type</label>
-                            </div>
+                        <div class="form-label-group">
+                            <input type="text" id="communityTitle" class="form-control" placeholder="Title" required="required" autofocus="autofocus">
+                            <label for="communityTitle">Title</label>
+                        </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="communityTitle" class="form-control" placeholder="Title" required="required"
-                                    autofocus="autofocus">
-                                <label for="communityTitle">Title</label>
-                            </div>
+                        <div class="form-label-group">
+                            <input class="upload-name form-control" readonly>
+                            <input type="file" id="upload_filename">
+                            <label for="upload_filename">썸네일</label>
                         </div>
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <input class="upload-name form-control" readonly>
-                                <input type="file" id="upload_filename">
-                                <label for="upload_filename">썸네일</label>
-                            </div>
                         </div>
                         <div class="form-group c-board">
-                            <div class="form-row">
-                                <div class="form-label-group">
-                                    <textarea id="communityContent" class="form-control"
-                                        style="width: 400px; height: 100px; resize: none;" placeholder="Answer"></textarea>
-                                </div>
-                            </div>
+                        <div class="form-row">
+                            <textarea id="communityContent" class="form-control" style="width: 100%; height: 300px; resize: none;" placeholder="Content"></textarea>
+                            <!-- <div id="communityContent"></div> -->
+                        </div>
                         </div>
                         <div class="form-group c-movie">
-                            <div class="form-label-group">
-                                <input type="text" id="communityURL" class="form-control"
-                                    placeholder="ex)Youtube, Facebook, Instargram, etc" required="required" autofocus="autofocus">
-                                <label for="communityURL">URL</label>
-                            </div>
+                        <div class="form-label-group">
+                            <input type="text" id="communityURL" class="form-control" placeholder="ex)Youtube, Facebook, Instargram, etc" autofocus="autofocus">
+                            <label for="communityURL">Movie URL</label>
                         </div>
-                        <button class="btn btn-primary btn-block" type="button" data-dismiss="modal"
-                            onclick="modifyCommunity();">저장</button>
+                        </div>
+                        <button class="btn btn-primary btn-block" type="button" data-dismiss="modal" onclick="addCommunity();">저장</button>
                     </form>
+                    </div>
                 </div>
+                <!--// 컨텐츠 -->
             </div>
-            <!--// 컨텐츠 -->
+            <!-- /.container-fluid -->
+    
+            <!-- Sticky Footer -->
+            <div class="footer-container">
+                <%- include('../include/footer.html', {}) %>
+            </div>
+    
         </div>
         <!-- /.container-fluid -->
 

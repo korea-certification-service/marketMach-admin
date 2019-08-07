@@ -30,18 +30,7 @@
     <script>
         $(function() {
             "use strict"; // Start of use strict
-            $('.c-movie').css('display','none');
         });
-
-        function changeType(value) {
-            if(value == 'board' || value == "game") {
-                $('.c-board').css('display','block');
-                $('.c-movie').css('display','none');
-            } else {
-                $('.c-board').css('display','none');
-                $('.c-movie').css('display','block');
-            }
-        }
 
        function addCommunity() {
            let communityType = $('#communityType').val();
@@ -52,36 +41,19 @@
               return;
            }
 
-           if(communityType == 'board' || communityType == "game") {
-               if($('#communityContent').val() == "") {
-                   alert("Content을 입력해주세여.");
-                   return;
-               }
-
-               addForm = {
-                   "country":$('#country').val(),
-                   "type":$('#communityType').val(),
-                   "title": $('#communityTitle').val(),
-                   "content" : $('#communityContent').val()
-               };
-           } else {
-               if($("#upload_filename")[0].files[0] == undefined) {
-                 alert("upload file을 선택해주세여.");
-                 return;
-               }
-
-               if($('#communityURL').val() == "") {
-                   alert("URL을 입력해주세여.");
-                   return;
-               }
-
-               addForm = {
-                   "country":$('#country').val(),
-                   "type":$('#communityType').val(),
-                   "title": $('#communityTitle').val(),
-                   "movieUrl" : $('#communityURL').val()
-               };
+           if($('#communityContent').val() == "") {
+              alert("Content을 입력해주세여.");
+              return;
            }
+
+           addForm = {
+              "country":$('#country').val(),
+              "type":$('#communityType').val(),
+              "title": $('#communityTitle').val(),
+              "content" : $('#communityContent').val(),
+              "movieUrl" : $('#communityURL').val(),
+              "notice":true
+           };
 
             console.log(addForm);
 
@@ -111,10 +83,12 @@
           <form>
             <div class="form-group">
               <div class="form-label-group">
-                <select id="communityType" class="form-control" onchange="changeType(this.value);">
-                  <option value="board">게시글</option>
-                  <option value="game">게임공략</option>
-                  <option value="movie">동영상</option>
+                <select id="communityType" class="form-control">
+                  <option value="free">자유게시판</option>
+                  <option value="tabloid">찌라시</option>
+                  <option value="event">이벤트</option>
+                  <option value="game">게임</option>
+                  <option value="cryptocurrency">암호화폐</option>
                 </select>
               </div>
             </div>
@@ -137,7 +111,7 @@
             </div>
             <div class="form-group c-movie">
               <div class="form-label-group">
-                <input type="text" id="communityURL" class="form-control" placeholder="ex)Youtube, Facebook, Instargram, etc" required="required" autofocus="autofocus">
+                <input type="text" id="communityURL" class="form-control" placeholder="ex)Youtube, Facebook, Instargram, etc" autofocus="autofocus">
                 <label for="communityURL">URL</label>
               </div>
             </div>

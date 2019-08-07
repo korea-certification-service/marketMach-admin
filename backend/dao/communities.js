@@ -13,7 +13,8 @@ var CommunitySchema = new Schema({
     reporter: String,
     recommandCount: Number,
     nottobeCount: Number,
-    images: [Image]               // s3
+    images: [Image],               // s3
+    notice:Boolean
 });
 
 module.exports = CommunitySchema;
