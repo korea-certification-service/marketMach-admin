@@ -10,19 +10,6 @@
 
         $(function(){
             "use strict"; // Start of use strict
-            //$(".menu-container").load("/header");
-            //$(".footer-container").load("/footer");
-
-            $('#modifyCommunityModal').on('show.bs.modal', function (event) {
-                //event.preventDefault();
-                let button = $(event.relatedTarget);
-                let modalTitle = button.data('modal-title');
-                let modal = $(this);
-                let communityId = button.data('id');
-
-                modal.find('.modal-title').text(modalTitle);
-                modal.find('#modifyCommunity').load('/kyc/detail/' + communityId);
-            });
 
             $("#sidebarToggle").on('click',function(e) {
                 e.preventDefault();
@@ -30,94 +17,94 @@
                 $(".sidebar").toggleClass("toggled");
             });
 
-            // postAjaxMethod('/community/search', {country: $('#country').val()}, renderHTML);
+            postAjaxMethod('/kyc/search', {}, renderHTML);
 
-            // $("#title").keydown(function (key) {
-            //     if (key.keyCode == 13) {
-            //         search()
-            //     }
-            // });
+            $("#title").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    search()
+                }
+            });
         });
 
-    //     function search(pageType) {
-    //         let param = {
-    //             "perPage": 20
-    //         };
+        function search(pageType) {
+            let param = {
+                "perPage": 20
+            };
 
-    //         if($('#title').val() != "") param["title"] = $('#title').val();
-    //         // if($('#country').val() != "") param["country"] = $('#country').val();
-    //         if(pageType == "prev") {
-    //             if(pageIdx == 0) {
-    //                 alert("맨 처음 페이지 입니다.");
-    //                 return;
-    //             }
-    //             pageIdx = pageIdx - 1;
-    //             param["pageIdx"] = pageIdx;
-    //         } else if(pageType == "next") {
-    //             if(lastPageYn) {
-    //                 alert("마지막 페이지 입니다.");
-    //                 return;
-    //             }
-    //             pageIdx = pageIdx + 1;
-    //             param["pageIdx"] = pageIdx;
-    //         } else if(pageType == "crud") {
-    //             param["pageIdx"] = pageIdx;
-    //         } else {
-    //             pageIdx = 0;
-    //         }
+            if($('#title').val() != "") param["userTag"] = $('#title').val();
+            // if($('#country').val() != "") param["country"] = $('#country').val();
+            if(pageType == "prev") {
+                if(pageIdx == 0) {
+                    alert("맨 처음 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx - 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "next") {
+                if(lastPageYn) {
+                    alert("마지막 페이지 입니다.");
+                    return;
+                }
+                pageIdx = pageIdx + 1;
+                param["pageIdx"] = pageIdx;
+            } else if(pageType == "crud") {
+                param["pageIdx"] = pageIdx;
+            } else {
+                pageIdx = 0;
+            }
 
-    //         postAjaxMethod('/community/search', param, renderHTML);
-    //     }
+            postAjaxMethod('/kyc/search', param, renderHTML);
+        }
 
-    //     function renderHTML(res) {
-    //         console.log(res);
-    //         data = res.data;
+        function renderHTML(res) {
+            console.log(res);
+            data = res.data.list;
 
-    //         $('#community-list').html('');
-    //         if(data.length > 0) {
-    //             if(data.length < 20) {
-    //                 lastPageYn = true;
-    //             }
-    //             $('.pagination').css('display','');
-    //         } else {
-    //             $('.pagination').css('display','none');
-    //             $('#community-list').html('<tr>\n' +
-    // '                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
-    // '                                </tr>');
-    //         }
+            $('#community-list').html('');
+            if(data.length > 0) {
+                if(data.length < 20) {
+                    lastPageYn = true;
+                }
+                $('.pagination').css('display','');
+            } else {
+                $('.pagination').css('display','none');
+                $('#community-list').html('<tr>\n' +
+'                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
+'                                </tr>');
+            }
 
-    //         for(var i in data) {
-    //             let result = '<tr>\n' +
-    //                 '                                <td>'+data[i].regDate+'</td>\n' +
-    //                 '                                <td>'+data[i].type+'</td>\n' +
-    //                 '                                <td>'+(data[i].notice == undefined ? false : data[i].notice) +'</td>\n' +
-    //                 '                                <td>'+data[i].title+'</td>\n' +
-    //                 '                                <td>'+data[i].reporter +'</td>\n' +
-    //                 '                                <td>' +
-    //                 // '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
-    //                 '                                   <a href="/community/modify/' + data[i]._id + '"  class="btn btn-outline-info btn-sm"">수정</a>' +
-    //                 '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteCommunity(\'' + data[i]._id + '\')">삭제</button>';
-    //                 '                               </td>\n' +
-    //                 '                            </tr>';
-    //             $('#community-list').append(result);
-    //         }
-    //     }
+            let result = "";
+            for(var i in data) {
+                result += '<tr>\n' +
+                    '                                <td>'+data[i].userTag+'</td>\n' +
+                    '                                <td>'+data[i].firstName+'</td>\n' +
+                    '                                <td>'+data[i].lastName +'</td>\n' +
+                    '                                <td>'+data[i].middleName +'</td>\n' +
+                    '                                <td>'+data[i].birth+'</td>\n' +
+                    '                                <td>' +
+                    // '                                   <button class="btn btn-outline-info btn-sm" data-id="'+data[i]._id+'" data-toggle="modal" data-target="#modifyKycModal">수정</button>' +
+                    '                                   <a href="/kyc/detail/' + data[i].userId + '"  class="btn btn-outline-info btn-sm"">수정</a>' +
+                    '                               </td>\n' +
+                    '                            </tr>';                
+            }
+            $('#community-list').html(result);
+        }
 
     /***************detail화면을 보기위한 임시 tr태그****************/
-    $(function(){
-        $('#community-list').html('');
-        let result = '<tr>\n' +
-            '                                <td>'+"유저태그"+'</td>\n' +
-            '                                <td>'+"이름"+'</td>\n' +
-            '                                <td>'+"성" +'</td>\n' +
-            '                                <td>'+"생년월일"+'</td>\n' +
-            '                                <td>' +
-            '                                   <button class="btn btn-outline-info btn-sm" data-id="'+"id123"+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
-            '                               </td>\n' +
-            '                            </tr>';
-        $('#community-list').append(result);
+    // $(function(){
+    //     $('#community-list').html('');
+    //     let result = '<tr>\n' +
+    //         '                                <td>'+"유저태그"+'</td>\n' +
+    //         '                                <td>'+"이름"+'</td>\n' +
+    //         '                                <td>'+"성" +'</td>\n' +
+    //         '                                <td>'+"생년월일"+'</td>\n' +
+    //         '                                <td>' +
+    //         '                                   <button class="btn btn-outline-info btn-sm" data-id="'+"id123"+'" data-toggle="modal" data-target="#modifyKycModal">수정</button>' +
+    //         '                               </td>\n' +
+    //         '                            </tr>';
+    //     $('#community-list').append(result);
 
-    });
+    // });
     /***************///detail화면을 보기위한 임시 tr태그****************/
 
     </script>
@@ -146,7 +133,7 @@
                     <div class="form-group">
                         <div class="form-row">
                             <div class="col-md-2">
-                                Title
+                                MarketMACH ID
                             </div>
                             <div class="col-md-6">
                                 <input type="text" id="title" class="form-control">
@@ -165,10 +152,10 @@
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <colgroup>
-                                <col width="150">
-                                <col width="80">
-                                <col width="80">
-                                <col width="340">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
                                 <col width="100">
                                 <col width="100">
                             </colgroup>
@@ -176,14 +163,15 @@
                             <tr>
                                 <th>UserTag</th>                                
                                 <th>First Name</th>
-                                <th>Surname</th>
+                                <th>Sur Name</th>
+                                <th>Middle Name</th>
                                 <th>Date of birth</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody id="community-list">
                             <tr>
-                                <td colspan="5">검색 결과가 없습니다.</td>
+                                <td colspan="6">검색 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
@@ -216,32 +204,14 @@
     <!-- /.content-wrapper -->
 
 </div>
-
-<!-- modify user Modal-->
-<div class="modal fade" id="modifyUserModal" tabindex="-1" role="dialog" aria-labelledby="modifyUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifyUserModalLabel">사용자 수정</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modifyUser">
-
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- /#wrapper -->
 
 <!-- add community Modal-->
-<% var objOpt ={modalId: "registerCommunityModal", modalTitle: "공지사항 등록", bodyId: "registerCommunity"}; %>
+<% var objOpt ={modalId: "registerKycModal", modalTitle: "공지사항 등록", bodyId: "registerKyc"}; %>
 <%- include('../include/modal.html', {objOpt}) %>
     
 <!-- modify community Modal-->
-<% var objOpt ={modalId: "modifyCommunityModal", modalTitle: "FAQ 수정", bodyId: "modifyCommunity"}; %>
+<% var objOpt ={modalId: "modifyKycModal", modalTitle: "FAQ 수정", bodyId: "modifyKyc"}; %>
 <%- include('../include/modal.html', {objOpt}) %>
 
 <!-- Logout Modal-->
