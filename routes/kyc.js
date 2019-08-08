@@ -17,7 +17,7 @@ router.get('/detail/:userId', function(req, res, next) {
     res.render('kyc/detail', { title: 'Biteweb Admin - detail', userId: req.params.userId});
 });
 
-router.get('/info/:userId', function (req, res, next) {
+router.get('/detail/info/:userId', function (req, res, next) {
     kyc.detail(req, res);
 });
 

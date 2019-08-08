@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-
+  <%- include('../include/head.html', {}) %>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -27,71 +27,56 @@
 <!-- Core plugin JavaScript-->
 <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- <script>
+<script>
+    let userId = '<%= userId %>';
     $(function() {
-        "use strict"; // Start of use strict
-        let kycId = '<%# kycId %>';
-        let country = $('#country').val();
-        console.log(kycId);
-        getAjaxMethod('/community/detail/info/' + country + '/' + kycId, renderDetail);
+        "use strict"; // Start of use strict    
+        getAjaxMethod('/kyc/detail/info/' + userId, renderDetail);
     });
 
     function renderDetail(data) {
         console.log(data);
-        $('#worker').val(data.data.reporter);
-        $('#regDate').val(data.data.regDate);
-        $('#communityTitle').val(data.data.title);
-        $('#communityContent').val(data.data.content);
-        $('#kycId').val(data.data._id);
-        $('#communityType').val(data.data.type);
-        $('#communityURL').val(data.data.movieUrl);
-        $('.upload-name').val(data.data.images[0].origin_name);
+        $('#userTag').val(data.data.user.userTag);
+        $('#verification').val(data.data.kyc.verification);
+        $('#verificationDate').val(data.data.kyc.verificationDate == undefined ? "" : data.data.kyc.verificationDate.substr(2));
+        $('#userTag').val(data.data.user.userTag);
+        $('#firstName').val(data.data.kyc.lastName);
+        $('#lastName').val(data.data.kyc.firstName);
+        $('#middleName').val(data.data.kyc.middleName);
+        $('#gender').val(data.data.kyc.gender);
+        $('#birth').val(data.data.kyc.birth);
+        $('#type').val(data.data.kyc.type);
+        $('#idNo').val(data.data.kyc.idNo);
+        $('#issueDate').val(data.data.kyc.issueDate);
+        $('#content').val(data.data.kyc.reason == undefined ? "" : data.data.kyc.reason);
+        $('#uploadImage').prop('src',data.data.kyc.images[0].path);
     }
 
-    function modifyCommunity() {
-        let communityType = $('#communityType').val();
+    function modify(value) {
         let updateForm = {};
-        if($('#communityTitle').val() == "") {
-            alert("Title을 입력해주세여.");
-            return;
+        let verification = false;
+
+        if(value == "accept") {
+          verification = true;
         }
 
-        if($('#communityContent').val() == "") {
-            alert("Content을 입력해주세여.");
+        if(value == 'reject' && $('#content').val() == "") {
+            alert("사유를 입력해주세요.");
             return;
         }
 
         updateForm = {
-            "country":$('#country').val(),
-            "id": $('#kycId').val(),
-            "type":$('#communityType').val(),
-            "title": $('#communityTitle').val(),
-            "content" : $('#communityContent').val(),
-            "movieUrl" : $('#communityURL').val()
+          "verification": verification,
+          "reason": $('#content').val()
         };
 
-        console.log(updateForm);
-
-        putAjaxMethod('/community/' + updateForm.id, updateForm, resultCall);
+        putAjaxMethod('/kyc/' + userId, updateForm, resultCall);
     }
 
     function resultCall (result) {
-      let image = new FormData();
-      let imageData = $("#upload_filename")[0].files[0];
-      
-      if (imageData != null) {
-        image.append("image", $("#upload_filename")[0].files[0]);
-        imageAjaxMethod('/community/' + $('#country').val() + '/' + result.data._id+ "/images", image, resultImageCallback); 
-      } else {
-        search('crud');
-      }
+      history.back(-1);
     }
-
-    function resultImageCallback (result) {
-      console.log('수정완료');
-      search('crud');
-    }
-</script> -->
+</script>
 <style>
 .menu-container {
   background-color: #212529;
@@ -141,27 +126,49 @@
                       <div class="card-header">KYC 인증요청</div>
                       <div class="card-body">
                         <div class="img-wrap" style="width: 49%; margin-right: 2%;">
-                            <img src="https://www.women1366.kr/stopds/img/sub04_icon25.png" alt="" style="display: inline-block; width: 100%;">
+                            <img id="uploadImage" src="" alt="" style="display: inline-block; width: 100%;">
                         </div>
                         <form style="width: 49%;">
                           <div class="form-group">
                             <div class="form-row">
                               <div class="col-md-6">
                                 <div class="form-label-group">
-                                  <input type="text" id="" class="form-control" placeholder="" required="required" readonly>
-                                  <label for="">First Name</label>
+                                  <input type="text" id="userTag" class="form-control" placeholder="" required="" readonly>
+                                  <label for="userTag">MacketMACH ID</label>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-label-group">
-                                  <input type="email" id="" class="form-control" placeholder="" required="required" readonly>
-                                  <label for="">Surname</label>
+                                  <input type="text" id="verification" class="form-control" placeholder="" required="" readonly>
+                                  <label for="verification">Verification</label>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-label-group">
-                                  <input type="email" id="" class="form-control" placeholder="" required="required" readonly>
-                                  <label for="">Middle Name</label>
+                                  <input type="text" id="verificationDate" class="form-control" placeholder="" required="" readonly>
+                                  <label for="verificationDate">Verification Date</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="form-row">
+                              <div class="col-md-6">
+                                <div class="form-label-group">
+                                  <input type="text" id="firstName" class="form-control" placeholder="" required="required" readonly>
+                                  <label for="firstName">First Name</label>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-label-group">
+                                  <input type="text" id="lastName" class="form-control" placeholder="" required="required" readonly>
+                                  <label for="lastName">Surname</label>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-label-group">
+                                  <input type="text" id="middleName" class="form-control" placeholder="" required="required" readonly>
+                                  <label for="middleName">Middle Name</label>
                                 </div>
                               </div>
                             </div>
@@ -170,14 +177,14 @@
                             <div class="form-row">
                               <div class="col-md-6" style="max-width: 50%;">
                                 <div class="form-label-group">
-                                  <input type="text" id="" class="form-control" placeholder="" required="required" readonly>
-                                  <label for="">Sex</label>
+                                  <input type="text" id="gender" class="form-control" placeholder="" required="required" readonly>
+                                  <label for="gender">Sex</label>
                                 </div>
                               </div>
                               <div class="col-md-6" style="max-width: 50%;">
                                 <div class="form-label-group">
-                                  <input type="email" id="" class="form-control" placeholder="" required="required" readonly>
-                                  <label for="">Date of birth</label>
+                                  <input type="text" id="birth" class="form-control" placeholder="" required="required" readonly>
+                                  <label for="birth">Date of birth</label>
                                 </div>
                               </div>
                             </div>
@@ -186,31 +193,31 @@
                               <div class="form-row">
                                 <div class="col-md-6">
                                   <div class="form-label-group">
-                                    <input type="text" id="" class="form-control" placeholder="" required="required" readonly>
-                                    <label for="">Type</label>
+                                    <input type="text" id="type" class="form-control" placeholder="" required="required" readonly>
+                                    <label for="type">Type</label>
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-label-group">
-                                    <input type="email" id="" class="form-control" placeholder="" required="required" readonly>
-                                    <label for="">No.</label>
+                                    <input type="text" id="idNo" class="form-control" placeholder="" required="required" readonly>
+                                    <label for="idNo">No.</label>
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-label-group">
-                                    <input type="email" id="" class="form-control" placeholder="" required="required" readonly>
-                                    <label for="">Issue Date</label>
+                                    <input type="text" id="issueDate" class="form-control" placeholder="" required="required" readonly>
+                                    <label for="issueDate">Issue Date</label>
                                   </div>
                                 </div>
                               </div>
                           </div>
                           <div class="form-group c-board">
                             <div class="form-row">
-                                <textarea id="communityContent" class="form-control" style="width: 100%; height: 150px; resize: none;" placeholder="Content"></textarea>
+                                <textarea id="content" class="form-control" style="width: 100%; height: 150px; resize: none;" placeholder="사유"></textarea>
                                 <!-- <div id="communityContent"></div> -->
                             </div>
                           </div>
-                          <a class="btn btn-primary" href="javascript:admission();" style="width: 49%; margin-right:2%;">승인</a><a class="btn btn-danger" href="javascript:reject();" style="width: 49%;">거절</a>
+                          <a class="btn btn-primary" href="javascript:modify('accept');" style="width: 49%; margin-right:2%;">승인</a><a class="btn btn-danger" href="javascript:modify('reject');" style="width: 49%;">거절</a>
                         </form>
                       </div>
                     </div>
