@@ -4,40 +4,40 @@
     <%- include('../include/head.html', {}) %>
     <title><%= title %></title>
     <script>
-    //     let data, index;
-    //     let pageIdx = 0;
-    //     let lastPageYn = false;
+        let data, index;
+        let pageIdx = 0;
+        let lastPageYn = false;
 
-    //     $(function(){
-    //         "use strict"; // Start of use strict
-    //         //$(".menu-container").load("/header");
-    //         //$(".footer-container").load("/footer");
+        $(function(){
+            "use strict"; // Start of use strict
+            //$(".menu-container").load("/header");
+            //$(".footer-container").load("/footer");
 
-    //         $('#modifyCommunityModal').on('show.bs.modal', function (event) {
-    //             //event.preventDefault();
-    //             let button = $(event.relatedTarget);
-    //             let modalTitle = button.data('modal-title');
-    //             let modal = $(this);
-    //             let communityId = button.data('id');
+            $('#modifyCommunityModal').on('show.bs.modal', function (event) {
+                //event.preventDefault();
+                let button = $(event.relatedTarget);
+                let modalTitle = button.data('modal-title');
+                let modal = $(this);
+                let communityId = button.data('id');
 
-    //             modal.find('.modal-title').text(modalTitle);
-    //             modal.find('#modifyCommunity').load('/community/detail/' + communityId);
-    //         });
+                modal.find('.modal-title').text(modalTitle);
+                modal.find('#modifyCommunity').load('/kyc/detail/' + communityId);
+            });
 
-    //         $("#sidebarToggle").on('click',function(e) {
-    //             e.preventDefault();
-    //             $("body").toggleClass("sidebar-toggled");
-    //             $(".sidebar").toggleClass("toggled");
-    //         });
+            $("#sidebarToggle").on('click',function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+            });
 
-    //         postAjaxMethod('/community/search', {country: $('#country').val()}, renderHTML);
+            // postAjaxMethod('/community/search', {country: $('#country').val()}, renderHTML);
 
-    //         // $("#title").keydown(function (key) {
-    //         //     if (key.keyCode == 13) {
-    //         //         search()
-    //         //     }
-    //         // });
-    //     });
+            // $("#title").keydown(function (key) {
+            //     if (key.keyCode == 13) {
+            //         search()
+            //     }
+            // });
+        });
 
     //     function search(pageType) {
     //         let param = {
@@ -112,7 +112,7 @@
             '                                <td>'+"성" +'</td>\n' +
             '                                <td>'+"생년월일"+'</td>\n' +
             '                                <td>' +
-            '                                   <a href="/kyc/detail/' + "id123" + '"  class="btn btn-outline-info btn-sm"">응답</a>' +
+            '                                   <button class="btn btn-outline-info btn-sm" data-id="'+"id123"+'" data-toggle="modal" data-target="#modifyCommunityModal">수정</button>' +
             '                               </td>\n' +
             '                            </tr>';
         $('#community-list').append(result);
@@ -216,6 +216,24 @@
     <!-- /.content-wrapper -->
 
 </div>
+
+<!-- modify user Modal-->
+<div class="modal fade" id="modifyUserModal" tabindex="-1" role="dialog" aria-labelledby="modifyUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyUserModalLabel">사용자 수정</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modifyUser">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- /#wrapper -->
 
 <!-- add community Modal-->
