@@ -4,6 +4,7 @@ var serviceUsers = require('../backend/service/user');
 var serviceCoins = require('../backend/service/coins');
 var servicePoints = require('../backend/service/points');
 var serviceVtrs = require('../backend/service/vtrs');
+var serviceItems = require('../backend/service/items');
 var serviceGameStation = require('../backend/service/gameStation');
 var util = require('../utils/util');
 var dbconfig = require('../config/dbconfig');
@@ -220,6 +221,57 @@ router.post('/gameStation/exchange/list', function (req, res, next) {
         bitwebResponse.code = 200;
         bitwebResponse.data = gameStationPlays;
         res.status(200).send(bitwebResponse.create())
+    }).catch((err) => {
+        console.error('err=>', err)
+        bitwebResponse.code = 500;
+        bitwebResponse.message = err;
+        res.status(500).send(bitwebResponse.create())
+    })
+});
+
+router.post('/item/reply/list', function (req, res, next) {
+    let country = dbconfig.country;
+    let bitwebResponse = new BitwebResponse();
+    let startDate = req.body.startDate;
+    let endDate = req.body.endDate;
+    let condition = {
+        "regDate":{
+            "$gte": startDate,
+            "$lte": endDate
+        }
+    };
+
+    serviceItems.replyList(condition)
+    .then(replyItems => {
+        let itemIds = [];
+        for(var i in replyItems) {
+            itemIds.push(replyItems[i]._doc.itemId);
+        }
+
+        let itemCondition = {
+            "_id": itemIds
+        }
+        serviceItems.list(itemCondition)
+        .then(items => {
+            for(var i in replyItems) {
+                for(var j in items) {
+                    if(replyItems[i]._doc.itemId == items[j]._doc._id.toString()) {
+                        if(items[j]._doc['reply'] == undefined) {
+                            items[j]._doc['reply'] = [];
+                        }
+                        items[j]._doc['reply'].push(replyItems[i]._doc);
+                    }
+                }
+            }
+            bitwebResponse.code = 200;
+            bitwebResponse.data = items;
+            res.status(200).send(bitwebResponse.create())
+        }).catch((err) => {
+            console.error('err=>', err)
+            bitwebResponse.code = 500;
+            bitwebResponse.message = err;
+            res.status(500).send(bitwebResponse.create())
+        })
     }).catch((err) => {
         console.error('err=>', err)
         bitwebResponse.code = 500;
