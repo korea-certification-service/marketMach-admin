@@ -86,6 +86,20 @@ function listUsers(req) {
     })
 }
 
+function blackListUser(country, condition) {
+    return new Promise((resolve, reject) => {
+        db.connectDB(country)
+            .then(() => bitwebUser.blackListUsers(condition))
+            .then((result) => {
+                console.log('result=>' , result);
+                resolve(result)
+            }).catch((err) => {
+            reject(err)
+        })
+    })
+}
+
+
 function updateAuthEmail(country, userId, data) {
     return new Promise((resolve, reject) => {
         db.connectDB(country)
@@ -175,3 +189,4 @@ exports.update = update;
 exports.remove = remove;
 exports.createWithdrawUser = createWithdrawUser;
 exports.listWithdrawUser = listWithdrawUser;
+exports.blackListUser = blackListUser;

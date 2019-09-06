@@ -1,5 +1,6 @@
 var User = require('../../model/user');
 var WithdrawUsers = require('../../model/withdrawUsers');
+var BlackListUsers = require('../../model/Blacklists');
 
 function count (condition) {
     return new Promise((resolve, reject) => {
@@ -60,6 +61,19 @@ function listWithdrawUsers (condition) {
     })
 }
 
+function blackListUsers (condition) {
+    return new Promise((resolve, reject) => {
+        BlackListUsers.find(condition)
+            .sort({regDate: 'desc'})
+            .exec(function (err, item) {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                }
+                resolve(item)
+            })
+    })
+}
 
 function listUsers (body, data) {
     return new Promise((resolve, reject) => {
@@ -186,3 +200,4 @@ exports.update = update;
 exports.deleteUserById = deleteUserById;
 exports.createWithdrawUser = createWithdrawUser;
 exports.listWithdrawUsers = listWithdrawUsers;
+exports.blackListUsers = blackListUsers;
