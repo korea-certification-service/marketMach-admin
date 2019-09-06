@@ -1,6 +1,6 @@
 var User = require('../../model/user');
 var WithdrawUsers = require('../../model/withdrawUsers');
-var BlackListUsers = require('../../model/Blacklists');
+var BlackListUsers = require('../../model/blacklists');
 
 function count (condition) {
     return new Promise((resolve, reject) => {
