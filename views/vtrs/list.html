@@ -98,7 +98,7 @@
 '                                <td>'+(data[i].opposition_date == undefined ? "" : data[i].opposition_date) +'</td>\n' +
 '                                <td>';
                 if($('#country').val() == 'ONTOLOGY') {
-                    if(data[i].item.finalTransaction != undefined || data[i].item.finalTransaction == "") {
+                    if(data[i].item.finalTransaction != undefined && data[i].item.finalTransaction != "") {
                         result += '                                   <button class="btn btn-outline-info btn-sm btn-coin-trade'+i+'" onclick="blockLink(\''+data[i].item.finalTransaction+'\')">블록확인</button>';
                     }
                 } else {
