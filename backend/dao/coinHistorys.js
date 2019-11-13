@@ -2,18 +2,21 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var coinHistorysSchema = new Schema({
+    txHash: String,
+    fromAddress:String,
     extType: String,
     coinId: String,
     category: String,          
     status: String,
     currencyCode: String,
-    price: Number,
     amountCurrency: String,
     amount: Number,
-    mach: Number,
+    price: Number,
     fee: Number,
-    memo: String,
     regDate: String,
+    reqDate: String,
+    totalAmount: Number,
+    memo: String,
     game: String
 });
 

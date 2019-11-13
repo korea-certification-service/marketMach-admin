@@ -61,14 +61,18 @@ function successTradeStatus(req, res) {
         .then((vtr) => {
             if(vtr.buy_status == undefined) {
                 data['buy_status'] = true;
-                data['completed_buy_date'] = util.formatDate(new Date().toLocaleString('ko-KR'))
+                data['completed_buy_date'] = util.formatDate(new Date().toString())
             }
-            data['sell_status'] = true;
-            data['completed_sell_date'] = util.formatDate(new Date().toLocaleString('ko-KR'))
+            
+            if(vtr.sell_status == undefined) {
+                data['sell_status'] = true;
+                data['completed_sell_date'] = util.formatDate(new Date().toString())
+            }
+
             data['completed'] = true;
-            data['completed_date'] = util.formatDate(new Date().toLocaleString('ko-KR'))
+            data['completed_date'] = util.formatDate(new Date().toString())
             data['confirm_status'] = true;
-            data['completed_confirm_date'] = util.formatDate(new Date().toLocaleString('ko-KR'))
+            data['completed_confirm_date'] = util.formatDate(new Date().toString())
             
             serviceVtr.updateVtrs(country, vtrId, data, vtr.buy_status)
                 .then((result) => {

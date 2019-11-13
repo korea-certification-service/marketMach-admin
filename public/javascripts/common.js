@@ -84,31 +84,40 @@ function tradeStatus(status) {
             result = '거래등록';
             break;
         case 1:
-            result = '구매확인';
+            result = '거래시작';
             break;
         case 2:
-            result = '판매완료';
+            result = '구매확인';
             break;
         case 3:
-            result = '구매확정';
+            result = '판매완료';
             break;
         case 4:
             result = '거래완료';
             break;
+        case 5:
+            result = '이의제기';
+            break;
+        case 6:
+            result = '거래완료(관리자처리)';
+            break;
         case 101:
-            result = '구매확인';
+            result = '거래시작';
             break;
         case 102:
-            result = '판매완료';
+            result = '구매확인';
             break;
         case 103:
-            result = '구매확정';
+            result = '판매완료';
             break;
         case 104:
             result = '거래완료';
             break;
-        default:
+        case 105:
             result = '이의제기';
+            break;
+        default:
+            result = '';
             break;
     }
 
