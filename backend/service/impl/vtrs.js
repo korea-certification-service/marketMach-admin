@@ -93,7 +93,7 @@ function deleteVtr(vtrId) {
 
 function deleteVtrTempByItemId (id) {
     return new Promise((resolve, reject) => {
-        VtrTemps.findByIdAndRemove(
+        VtrTemps.findOneAndRemove(
             {"item._id": id},
             function(err, vtr) {
                 if (err) {

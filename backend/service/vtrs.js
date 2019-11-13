@@ -140,7 +140,7 @@ function updateVtrs(country, vtrId, data, buy_status) {
                                             total_price = coin._doc.total_btc + vtr._doc.item.total_price;
                                             data1 = {"total_btc": total_price};
                                         } else if(vtr._doc.cryptoCurrencyCode == "ETH") {
-                                            total_price = coin._doc.total_eth + vtr._doc.item.total_price;
+                                            total_price = coin._doc.total_ether + vtr._doc.item.total_price;
                                             data1 = {"total_eth": total_price};
                                         } else if(vtr._doc.cryptoCurrencyCode == "ONT") {
                                             total_price = coin._doc.total_ont + vtr._doc.item.total_price;
@@ -170,7 +170,7 @@ function updateVtrs(country, vtrId, data, buy_status) {
                                                                         "vtr": vtr,
                                                                         "cryptoCurrencyCode": vtr._doc.cryptoCurrencyCode,                                                                                           
                                                                         "price": vtr._doc.price,
-                                                                        "reqUser":'admin',                                    
+                                                                        "reqUser":vtr._doc.from_userId,                                    
                                                                         "regDate": util.formatDate(new Date().toString())
                                                                     };
                                                                     reqDataEscrowHistory['escrowId'] = modifyEscrow._doc._id;
@@ -212,45 +212,7 @@ function updateVtrs(country, vtrId, data, buy_status) {
                                             })
                                     })
                             })
-                    } else {
-                        bitwebUsers.getByUserId(vtr._doc.to_userId)
-                            .then((to_user) => {
-                                bitwebCoins.getCoinById(to_user._doc.coinId)
-                                    .then((coin1) => {
-                                        let total_mach1 = coin1._doc.total_mach - vtr._doc.item.total_price;
-                                        let data2 = {"total_mach": total_mach1};
-                                        bitwebCoins.updateCoin(to_user._doc.coinId, data2)
-                                            .then(() => {
-                                                bitwebUsers.getByUserId(vtr._doc.from_userId)
-                                                    .then((user) => {
-                                                        let coinId = user._doc.coinId;
-                                                        bitwebCoins.getCoinById(coinId)
-                                                            .then((coin) => {
-                                                                let total_mach = coin._doc.total_mach + vtr._doc.item.total_price;
-                                                                let data1 = {"total_mach": total_mach};
-                                                                bitwebCoins.updateCoin(coinId, data1)
-                                                                    .then(() => {
-                                                                        let data2 = {"status": 6};
-                                                                        bitwebItems.updateItemStatus(vtr._doc.item._id, data2)
-                                                                            .then(() => {
-                                                                                bitwebVtrs.updateVtr(vtrId, data)
-                                                                                    .then((result) => {
-                                                                                        console.log('result=>', result);
-                                                                                        resolve(result)
-                                                                                    })
-                                                                                    .catch((err) => {
-                                                                                        reject(err)
-                                                                                    })
-                                                                            }).catch((err) => {
-                                                                            reject(err)
-                                                                        })
-                                                                    })
-                                                            })
-                                                    })
-                                            })
-                                    })
-                            })
-                    }
+                    } 
                 })
             )
     })
@@ -269,6 +231,20 @@ function deleteVtrs(country, vtrId) {
                                     .then((coin) => {
                                         let total_mach = coin._doc.total_mach + vtr._doc.item.total_price;
                                         let data1 = {"total_mach": total_mach};
+                                        if(vtr._doc.cryptoCurrencyCode == "BTC") {
+                                            total_price = coin._doc.total_btc + vtr._doc.item.total_price;
+                                            data1 = {"total_btc": total_price};
+                                        } else if(vtr._doc.cryptoCurrencyCode == "ETH") {
+                                            total_price = coin._doc.total_ether + vtr._doc.item.total_price;
+                                            data1 = {"total_eth": total_price};
+                                        } else if(vtr._doc.cryptoCurrencyCode == "ONT") {
+                                            total_price = coin._doc.total_ont + vtr._doc.item.total_price;
+                                            data1 = {"total_ont": total_price};
+                                        } else if(vtr._doc.cryptoCurrencyCode == "ONG") {
+                                            total_price = coin._doc.total_ong + vtr._doc.item.total_price;
+                                            data1 = {"total_ong": total_price};
+                                        }
+
                                         bitwebCoins.updateCoin(coinId, data1)
                                             .then(() => {
                                                 let data2 = {"status": 0};
@@ -278,8 +254,52 @@ function deleteVtrs(country, vtrId) {
                                                             .then(()=> {
                                                                 bitwebVtrs.deleteVtrTempByItemId(vtr._doc.item._id)
                                                                     .then(()=> {
-                                                                        console.log('result=>', vtr);
-                                                                        resolve(vtr);
+                                                                        let reqDataEscrow = {
+                                                                            'status':'cancelled',
+                                                                            'cancelled_regDate': util.formatDate(new Date().toString())
+                                                                        }
+                                                                        serviceEscrow.modify(country,{'vtrId':vtrId},reqDataEscrow)
+                                                                        .then((modifyEscrow)=> {
+                                                                            let reqDataEscrowHistory = {
+                                                                                "type": "cancel",
+                                                                                "itemId": vtr._doc.item._id,
+                                                                                "vtr": vtr,
+                                                                                "cryptoCurrencyCode": vtr._doc.cryptoCurrencyCode,                                                                                           
+                                                                                "price": vtr._doc.price,
+                                                                                "reqUser":vtr._doc.to_userId,                                    
+                                                                                "regDate": util.formatDate(new Date().toString())
+                                                                            };
+                                                                            if(modifyEscrow != null) {
+                                                                                reqDataEscrowHistory['escrowId'] = modifyEscrow._doc._id;
+                                                                                console.log('req escrow history data =>', reqDataEscrow);
+                                                                                serviceEscrowHistory.add(country, reqDataEscrowHistory);
+                                                                            }
+                                                                            
+                                                                            let reqCoinHistoryData = {
+                                                                                "extType" : "mach",
+                                                                                "coinId" : user._doc.coinId,
+                                                                                "category" : "deposit",
+                                                                                "status" : "success",
+                                                                                "currencyCode" : vtr._doc.cryptoCurrencyCode,
+                                                                                "amount" : vtr._doc.price,
+                                                                                "price" : vtr._doc.price,
+                                                                                "totalPrice":vtr._doc.price,
+                                                                                "regDate" : util.formatDate(new Date().toString())
+                                                                            }
+                                                                            serviceCoinHistory.add(country,reqCoinHistoryData)
+                                                                            .then(addHistory => {
+                                                                                console.log('result=>', vtr);
+                                                                                resolve(vtr)
+                                                                            }).catch((err) => {
+                                                                                console.error('update coin error =>', err);
+                                                                                let resErr = "처리중 에러 발생";
+                                                                                resolve(vtr)
+                                                                            })
+                                                                        }).catch((err) => {
+                                                                            console.error('add history error =>', err);
+                                                                            let resErr = "처리중 에러 발생";                                                                    
+                                                                            resolve(vtr)
+                                                                        })
                                                                     }).catch((err) => {
                                                                     reject(err)
                                                                 })
