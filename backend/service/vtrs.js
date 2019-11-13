@@ -246,7 +246,7 @@ function deleteVtrs(country, vtrId) {
                                         }
 
                                         bitwebCoins.updateCoin(coinId, data1)
-                                            .then(() => {
+                                            .then((updatedCoin) => {
                                                 let data2 = {"status": 0};
                                                 bitwebItems.updateItemStatus(vtr._doc.item._id, data2)
                                                     .then(() => {
