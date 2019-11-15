@@ -19,7 +19,8 @@
                 $(".sidebar").toggleClass("toggled");
             });
 
-            postAjaxMethod('/points/search', {}, renderHTML);
+            //postAjaxMethod('/points/search', {}, renderHTML);
+            search();
 
             $("#itemId").keydown(function (key) {
                 if (key.keyCode == 13) {
@@ -29,7 +30,9 @@
         });
 
         function search(pageType) {
-            let param = {
+            let param = {};
+            let option = {
+                "pageIdx": 0,
                 "perPage": 20
             };
 
@@ -39,31 +42,30 @@
             // }
 
             if($('#itemId').val() != "") param["itemId"] = $('#itemId').val();
-            if($('#country').val() != "") param["country"] = $('#country').val();
             if(pageType == "prev") {
                 if(pageIdx == 0) {
                     alert("맨 처음 페이지 입니다.");
                     return;
                 }
                 pageIdx = pageIdx - 1;
-                param["pageIdx"] = pageIdx;
+                option["pageIdx"] = pageIdx;
             } else if(pageType == "next") {
                 if(lastPageYn) {
                     alert("마지막 페이지 입니다.");
                     return;
                 }
                 pageIdx = pageIdx + 1;
-                param["pageIdx"] = pageIdx;
+                option["pageIdx"] = pageIdx;
             } else {
                 pageIdx = 0;
             }
 
-            postAjaxMethod('/points/search', param, renderHTML);
+            postAjaxMethod('/points/search', {param, option}, renderHTML);
         }
 
         function renderHTML(res) {
             console.log(res);
-            data = res.data;
+            data = res.data.list;
 
             if(data.length > 0) {
                 if(data.length < 20) {
@@ -74,7 +76,7 @@
             } else {
                 $('.pagination').css('display','none');
                 $('#point-list').html('<tr>\n' +
-'                                    <td colspan="6">검색 결과가 없습니다.</td>\n' +
+'                                    <td colspan="12">검색 결과가 없습니다.</td>\n' +
 '                                </tr>');
             }
 
@@ -84,13 +86,19 @@
                 let result = '<tr>\n' +
 '                                <td>'+data[i].item._id+'</td>\n' +
 '                                <td>'+data[i].item.title+'</td>\n' +
+'                                <td>'+data[i].point +'</td>\n' +
+'                                <td>'+data[i].vtrTemp.seller_id+'</td>\n' +
+'                                <td>'+data[i].vtrTemp.buyer_id+'</td>\n' +
 '                                <td><span class="trade-status'+i+'">'+tradeStatusTxt+'</span></td>\n' +
-'                                <td>'+data[i].item.total_point +'</td>\n' +
-'                                <td>'+data[i].completed_buy_date+'</td>\n' +
+'                                <td>'+data[i].regDate+'</td>\n' +
+'                                <td>'+(data[i].completed_buy_date == undefined ? "" : data[i].completed_buy_date) +'</td>\n' +
+'                                <td>'+(data[i].completed_sell_date == undefined ? "" : data[i].completed_sell_date) +'</td>\n' +
+'                                <td>'+(data[i].completed_confirm_date == undefined ? "" : data[i].completed_confirm_date) +'</td>\n' +
+'                                <td>'+(data[i].opposition_date == undefined ? "" : data[i].opposition_date) +'</td>\n' +
 '                                <td>';
-                if(data[i].item.status == 2) {
-                    result += '                                   <button class="btn btn-outline-info btn-sm btn-point-trade'+i+'" onclick="updateStatus(\'' + data[i]._id + '\', \''+i+'\')">거래 완료</button>' +
-                    '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteTrade(\'' + data[i]._id + '\',\''+i+'\')">거래 취소</button>';
+                if(data[i].item.status == 102) {
+                    // result += '                                   <button class="btn btn-outline-info btn-sm btn-point-trade'+i+'" onclick="updateStatus(\'' + data[i]._id + '\', \''+i+'\')">거래 완료</button>' +
+                    // '                                   <button class="btn btn-outline-danger btn-sm btn-point-trade'+i+'" onclick="deleteTrade(\'' + data[i]._id + '\',\''+i+'\')">거래 취소</button>';
                 }
                 result += '                               </td>\n' +
 '                            </tr>';
@@ -183,17 +191,23 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>Status</th>
-                                <th>Price</th>
-                                <th>Reg Date</th>
+                                <th>거래번호</th>
+                                <th>거래제목</th>                                
+                                <th>가격</th>                                
+                                <th>판매자</th>
+                                <th>구매자</th>
+                                <th>상태</th>
+                                <th>등록일</th>
+                                <th>구매완료일</th>
+                                <th>판매완료일</th>
+                                <th>거래완료일</th>
+                                <th>이의제기일</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody id="point-list">
                                 <tr>
-                                    <td colspan="6">검색 결과가 없습니다.</td>
+                                    <td colspan="12">검색 결과가 없습니다.</td>
                                 </tr>
                             </tbody>
                         </table>
