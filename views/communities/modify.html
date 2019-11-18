@@ -3,10 +3,10 @@
 <head>
     <%- include('../include/head.html', {}) %>
     <title><%= title %></title>
-    <script>        
-        $(function () {
-            let communityId = '<%= communityId %>';
-            let country = $('#country').val();
+    <script>
+        let communityId = '<%= communityId %>';
+        let country = $('#country').val();        
+        $(function () {            
             console.log(communityId);
             getAjaxMethod('/community/detail/info/' + country + '/' + communityId, renderDetail);
             // $('#communityContent').summernote({
