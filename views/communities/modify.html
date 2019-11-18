@@ -32,38 +32,24 @@
             let communityType = $('#communityType').val();
             let updateForm = {};
 
-            if (communityType == 'board') {
-                if ($('#communityTitle').val() == "") {
-                    alert("Title을 입력해주세여.");
-                    return;
-                }
-
-                if ($('#communityContent').val() == "") {
-                    alert("Content을 입력해주세여.");
-                    return;
-                }
-
-                updateForm = {
-                    "country": $('#country').val(),
-                    "id": $('#communityId').val(),
-                    "type": $('#communityType').val(),
-                    "title": $('#communityTitle').val(),
-                    "content": $('#communityContent').val()
-                };
-            } else {
-                if ($('#communityURL').val() == "") {
-                    alert("URL을 입력해주세여.");
-                    return;
-                }
-
-                updateForm = {
-                    "country": $('#country').val(),
-                    "id": $('#communityId').val(),
-                    "type": $('#communityType').val(),
-                    "title": $('#communityTitle').val(),
-                    "movieUrl": $('#communityURL').val()
-                };
+            if ($('#communityTitle').val() == "") {
+                alert("Title을 입력해주세여.");
+                return;
             }
+
+            if ($('#communityContent').val() == "") {
+                alert("Content을 입력해주세여.");
+                return;
+            }
+
+            updateForm = {
+                "country": $('#country').val(),
+                "id": $('#communityId').val(),
+                "type": $('#communityType').val(),
+                "title": $('#communityTitle').val(),
+                "content": $('#communityContent').val(),
+                "movieUrl": $('#communityURL').val()
+            };
 
             console.log(updateForm);
 
