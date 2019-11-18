@@ -22,7 +22,6 @@
             $('#regDate').val(data.data.regDate);
             $('#communityTitle').val(data.data.title);
             $('#communityContent').val(data.data.content);
-            $('#communityId').val(data.data._id);
             $('#communityType').val(data.data.type);
             $('#communityURL').val(data.data.movieUrl);
             $('.upload-name').val(data.data.images[0].origin_name);
@@ -44,7 +43,7 @@
 
             updateForm = {
                 "country": $('#country').val(),
-                "id": $('#communityId').val(),
+                "id": communityId,
                 "type": $('#communityType').val(),
                 "title": $('#communityTitle').val(),
                 "content": $('#communityContent').val(),
