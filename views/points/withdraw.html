@@ -27,6 +27,7 @@
                 let modal = $(this);
                 let pointId = button.data('point-id');
                 let point = button.data('point');
+                let userName = button.data('user-name');
                 index = button.data('index');
                 id = button.data('id');
                 userId = button.data('user-id');
@@ -35,6 +36,7 @@
                 modal.find('.modal-title').text(modalTitle);
                 modal.find('#pointId').val(pointId);
                 modal.find('#amount').val(point);
+                modal.find('#userName').val(userName);
             });
 
             postAjaxMethod('/points/history/search', {"type":"withdraw", "extType":"bank_account"}, renderHTML);
@@ -120,7 +122,7 @@
 '                                <td>'+data[i].regDate.substr(2)+'</td>\n' +
 '                                <td>';
                 if(!data[i].status) {
-                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+ user_id +'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
+                    result += '<button class="btn btn-outline-info btn-sm update-withdraw'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+ user_id +'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-user-name="'+userName+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
                 }
                     result += '</td>\n' +
 '                            </tr>';
@@ -279,6 +281,11 @@
                         <div class="card-body">
                             <form>
                                 <div class="form-group">
+                                    <div class="form-label-group">
+                                        <input type="hidden" id="pointId">
+                                        <input type="text" id="userName" class="form-control" placeholder="" readonly>
+                                        <label for="userName">Name</label>
+                                    </div>
                                     <div class="form-label-group">
                                         <input type="hidden" id="pointId">
                                         <input type="text" id="amount" class="form-control" placeholder="" required="required" autofocus="autofocus">
