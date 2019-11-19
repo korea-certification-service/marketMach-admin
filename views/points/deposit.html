@@ -27,6 +27,7 @@
                 let modal = $(this);                
                 let pointId = button.data('point-id');
                 let point = button.data('point');
+                let userName = button.data('user-name');
                 id = button.data('id');
                 userId = button.data('user-id');
                 index = button.data('index');
@@ -34,6 +35,7 @@
                 modal.find('.modal-title').text(modalTitle);
                 modal.find('#pointId').val(pointId);
                 modal.find('#amount').val(point);
+                modal.find('#userName').val(userName);
             });
 
             postAjaxMethod('/points/history/search', {"country":"KR", "type":"deposit", "extType":"bank_account"}, renderHTML);
@@ -117,8 +119,8 @@
 '                                <td>';
                 if(!data[i].status) {
                     if(data[i].user != undefined) {
-                        result += '<button class="btn btn-outline-info btn-sm update-depoosit'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user._id+'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
-                    }
+                        result += '<button class="btn btn-outline-info btn-sm update-depoosit'+i+'" data-index="'+i+'" data-id="'+data[i]._id+'" data-user-id="'+data[i].user._id+'" data-point-id="'+data[i].pointId+'" data-point="'+data[i].point+'" data-user-name="'+userName+'" data-toggle="modal" data-target="#modifyPointModal">이체완료</button>';
+                    } 
                 }
                     result += '</td>\n' +
 '                            </tr>';
@@ -278,8 +280,12 @@
                                 <div class="form-group">
                                     <div class="form-label-group">
                                         <input type="hidden" id="pointId">
+                                        <input type="text" id="userName" class="form-control" placeholder="" readonly>
+                                        <label for="userName">Name</label>
+                                    </div>
+                                    <div class="form-label-group">
                                         <input type="text" id="amount" class="form-control" placeholder="" required="required" autofocus="autofocus">
-                                        <label for="staffPhone">Point</label>
+                                        <label for="amount">Point</label>
                                     </div>
                                 </div> 
                                 <a class="btn btn-primary btn-block" href="javascript:updateDepoosit();">저장</a>
