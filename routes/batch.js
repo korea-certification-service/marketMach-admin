@@ -1,3 +1,8 @@
+/**
+ * 관리자 - 내부 처리 back-end
+ * 작성자 : Chef Kim
+ * 작성일 : 2019-11-20
+ */
 var express = require('express');
 var router = express.Router();
 var serviceUsers = require('../backend/service/user');
@@ -10,6 +15,7 @@ var util = require('../utils/util');
 var dbconfig = require('../config/dbconfig');
 var BitwebResponse = require('../utils/BitwebResponse')
 
+//사용자 전체 조회
 router.post('/user/list', function (req, res, next) {
     let country = dbconfig.country;
     let condition = {};
@@ -72,6 +78,7 @@ router.post('/user/list', function (req, res, next) {
     })
 });
 
+//특정 사용자의 코인/포인트 정보 및 거래 내역 조회
 router.get('/user/detail/:userTag', function (req, res, next) {
     let country = dbconfig.country;
     let userTag = req.params.userTag;
@@ -145,6 +152,7 @@ router.get('/user/detail/:userTag', function (req, res, next) {
     })
 });
 
+//탈퇴회원 전체 조회
 router.post('/user/withdraw/list', function (req, res, next) {
     let country = dbconfig.country;
     let condition = {};
@@ -166,6 +174,7 @@ router.post('/user/withdraw/list', function (req, res, next) {
     })
 });
 
+//암호화폐 내역 전체 조회
 router.post('/history/coin/list', function (req, res, next) {
     let country = dbconfig.country;
     let bitwebResponse = new BitwebResponse();
@@ -187,6 +196,7 @@ router.post('/history/coin/list', function (req, res, next) {
     })
 });
 
+//게임 스테이션 내역 조회
 router.post('/gameStation/action/list', function (req, res, next) {
     let country = dbconfig.country;
     let bitwebResponse = new BitwebResponse();
@@ -208,6 +218,7 @@ router.post('/gameStation/action/list', function (req, res, next) {
     })
 });
 
+//게임 스테이션 교환 내역 조회
 router.post('/gameStation/exchange/list', function (req, res, next) {
     let country = dbconfig.country;
     let bitwebResponse = new BitwebResponse();
@@ -229,6 +240,7 @@ router.post('/gameStation/exchange/list', function (req, res, next) {
     })
 });
 
+//거래별 댓글 목록 조회
 router.post('/item/reply/list', function (req, res, next) {
     let country = dbconfig.country;
     let bitwebResponse = new BitwebResponse();
@@ -280,6 +292,7 @@ router.post('/item/reply/list', function (req, res, next) {
     })
 });
 
+//블랙리스트 전체 조회
 router.post('/user/blackList', function (req, res, next) {
     let country = dbconfig.country;
     let condition = {};

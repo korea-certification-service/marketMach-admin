@@ -1,3 +1,8 @@
+/**
+ * Response 모듈
+ * 작성자 : Chef Kim
+ * 작성일 : 2019-07-11
+ */
 function Response() {
 
     if (!(this instanceof Response)) {

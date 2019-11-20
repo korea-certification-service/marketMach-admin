@@ -1,4 +1,10 @@
+/**
+ * Util 모듈
+ * 작성자 : Chef Kim
+ * 작성일 : 2019-11-20
+ */
 
+ //Date format 변환 함수(YYYY/MM/DD HH:MI:SS)
 function formatDate (date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -19,6 +25,7 @@ function formatDate (date) {
     return getDate + " " + getTime;
 }
 
+//날짜 계산
 function calculateDate (date, interval_type, interval) {
     var d = new Date(date),
         month = (interval_type == "M" ? '' + (d.getMonth() + 1 + interval) :  '' + (d.getMonth() + 1)),

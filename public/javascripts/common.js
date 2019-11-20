@@ -1,3 +1,10 @@
+/**
+ * front-end 공통 모듈
+ * 작성자 : Chef Kim
+ * 작성일 : 2019-11-20
+ */
+
+ //get ajax 함수
 function getAjaxMethod(url, callback) {
     $.ajax({
         method: "GET",
@@ -13,6 +20,7 @@ function getAjaxMethod(url, callback) {
     });
 }
 
+//post ajax 함수
 function postAjaxMethod(url, param, callback) {
     $.ajax({
         method: "POST",
@@ -30,6 +38,7 @@ function postAjaxMethod(url, param, callback) {
     });
 }
 
+//put ajax 함수
 function putAjaxMethod(url, param, callback) {
     $.ajax({
         method: "PUT",
@@ -47,6 +56,7 @@ function putAjaxMethod(url, param, callback) {
     });
 }
 
+//delete ajax 함수
 function deleteAjaxMethod(url, callback) {
     $.ajax({
         method: "DELETE",
@@ -62,6 +72,7 @@ function deleteAjaxMethod(url, callback) {
     });
 }
 
+//파일 업로드 ajax 함수
 function imageAjaxMethod(url, data, callback) {
     $.ajax({
         method: "POST",
@@ -77,6 +88,7 @@ function imageAjaxMethod(url, data, callback) {
     })
 }
 
+//거래 상태값 변환 함수
 function tradeStatus(status) {
     let result = '';
     switch(status) {
